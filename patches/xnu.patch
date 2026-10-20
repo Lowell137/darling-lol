@@ -29,7 +29,7 @@ index e14e7ea..024981b 100644
  #target_link_libraries(system_kernel system_duct platform_static32 platform_static64)
  make_fat(system_kernel)
 diff --git a/darling/src/libsystem_kernel/emulation/CMakeLists.txt b/darling/src/libsystem_kernel/emulation/CMakeLists.txt
-index 5b2e765..40308eb 100644
+index 5b2e765..d318d0e 100644
 --- a/darling/src/libsystem_kernel/emulation/CMakeLists.txt
 +++ b/darling/src/libsystem_kernel/emulation/CMakeLists.txt
 @@ -6,13 +6,12 @@ enable_language(ASM)
@@ -48,7 +48,7 @@ index 5b2e765..40308eb 100644
 +# Quoted values are kept off the directory-wide definitions: those are pasted unescaped
 +# into the mig command lines, which breaks the shell quoting.
 +set_source_files_properties(src/xnu_syscall/bsd/helper/misc/sysctl_kern.c PROPERTIES COMPILE_DEFINITIONS
-+	"EMULATED_SYSNAME=\"Darwin\";EMULATED_RELEASE=\"23.6.0\";EMULATED_VERSION=\"Darwin Kernel Version 23.6.0: Mon Jul 29 21:14:30 PDT 2024\\; root:xnu-10063.141.2~1/RELEASE_X86_64\";EMULATED_OSVERSION=\"23H124\";EMULATED_OSPRODUCTVERSION=\"14.7\"")
++	"EMULATED_SYSNAME=\"Darwin\";EMULATED_RELEASE=\"23.6.0\";EMULATED_VERSION=\"Darwin Kernel Version 23.6.0: Mon Jul 29 21:14:30 PDT 2024\\; root:xnu-10063.141.2~1/RELEASE_X86_64\";EMULATED_OSVERSION=\"23G80\";EMULATED_OSPRODUCTVERSION=\"14.6\"")
  
  # include src/startup for rtsig.h
  include_directories(
@@ -1866,7 +1866,7 @@ index 7d5ef80..46debb8 100644
  	[521] = sys_abort_with_payload,
  	[524] = sys_setattrlistat,
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_hw.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_hw.c
-index f273989..058b985 100644
+index f273989..8751728 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_hw.c
 +++ b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_hw.c
 @@ -9,6 +9,8 @@
@@ -1886,7 +1886,7 @@ index f273989..058b985 100644
  	_HW_PHYSICAL_CPU = 1000,
  	_HW_PHYSICAL_CPU_MAX,
  	_HW_LOGICAL_CPU,
-@@ -24,10 +27,14 @@ enum {
+@@ -24,10 +27,15 @@ enum {
  	_HW_CPUSUBTYPE,
  	_HW_CPUTHREADTYPE,
  	_HW_64BITCAPABLE,
@@ -1895,6 +1895,7 @@ index f273989..058b985 100644
 +	_HW_CPUFREQUENCY = 1500,
 +	_HW_CACHECONFIG = 1200,
 +	_HW_CACHESIZE,
++	_HW_PACKAGES,
  };
  
  static sysctl_handler(handle_availcpu);
@@ -1902,7 +1903,7 @@ index f273989..058b985 100644
  static sysctl_handler(handle_physicalcpu);
  static sysctl_handler(handle_physicalcpu_max);
  static sysctl_handler(handle_logicalcpu);
-@@ -39,11 +46,78 @@ static sysctl_handler(handle_cpusubtype);
+@@ -39,11 +47,85 @@ static sysctl_handler(handle_cpusubtype);
  static sysctl_handler(handle_cputhreadtype);
  static sysctl_handler(handle_cpu64bitcapable);
  static sysctl_handler(handle_machine);
@@ -1911,6 +1912,7 @@ index f273989..058b985 100644
 +static sysctl_handler(handle_cpufrequency_compat);
 +static sysctl_handler(handle_cacheconfig);
 +static sysctl_handler(handle_cachesize);
++static sysctl_handler(handle_packages);
 +
 +/* hw.optional: CPUID leaf, output register (0-3 = eax-edx) and bit */
 +static long optional_feature(void* old, unsigned long* oldlen, unsigned int leaf, int reg, int bit)
@@ -1946,7 +1948,13 @@ index f273989..058b985 100644
 +optional_handler(avx2_0, 7, 1, 5)
 +optional_handler(bmi1, 7, 1, 3)
 +optional_handler(bmi2, 7, 1, 8)
-+optional_handler(avx512f, 7, 1, 16)
++// darling-lol: Zen 4 exposes AVX-512, the masked Coffee Lake CPU does not.
++static sysctl_handler(handle_optional_avx512f)
++{
++	sysctl_handle_size(sizeof(int));
++	*((int*) old) = 0;
++	return 0;
++}
 +
 +enum {
 +	_HW_OPTIONAL = 1100,
@@ -1982,7 +1990,7 @@ index f273989..058b985 100644
  	{ .oid = _HW_PHYSICAL_CPU, .type = CTLTYPE_INT, .exttype = "", .name = "physicalcpu", .handler = handle_physicalcpu },
  	{ .oid = _HW_PHYSICAL_CPU_MAX, .type = CTLTYPE_INT, .exttype = "", .name = "physicalcpu_max", .handler = handle_physicalcpu_max },
  	{ .oid = _HW_LOGICAL_CPU, .type = CTLTYPE_INT, .exttype = "", .name = "logicalcpu", .handler = handle_logicalcpu },
-@@ -55,7 +129,12 @@ const struct known_sysctl sysctls_hw[] = {
+@@ -55,7 +137,13 @@ const struct known_sysctl sysctls_hw[] = {
  	{ .oid = _HW_CPUTHREADTYPE, .type = CTLTYPE_INT, .exttype = "", .name = "cputhreadtype", .handler = handle_cputhreadtype },
  	{ .oid = _HW_64BITCAPABLE, .type = CTLTYPE_INT, .exttype = "", .name = "cpu64bit_capable", .handler = handle_cpu64bitcapable },
  	{ .oid = HW_MACHINE, .type = CTLTYPE_STRING, .exttype = "S", .name = "machine", .handler = handle_machine },
@@ -1991,12 +1999,13 @@ index f273989..058b985 100644
 +	{ .oid = HW_MODEL, .type = CTLTYPE_STRING, .exttype = "S", .name = "model", .handler = handle_model },
 +	{ .oid = _HW_CPUFREQUENCY, .type = CTLTYPE_QUAD, .exttype = "Q", .name = "cpufrequency", .handler = handle_cpufrequency },
 +	{ .oid = _HW_CPUFREQUENCY_COMPAT, .type = CTLTYPE_INT, .exttype = "I", .name = "cpufrequency_compat", .handler = handle_cpufrequency_compat },
++	{ .oid = _HW_PACKAGES, .type = CTLTYPE_INT, .exttype = "", .name = "packages", .handler = handle_packages },
 +	{ .oid = _HW_CACHECONFIG, .type = CTLTYPE_OPAQUE, .exttype = "Q", .name = "cacheconfig", .handler = handle_cacheconfig },
 +	{ .oid = _HW_CACHESIZE, .type = CTLTYPE_OPAQUE, .exttype = "Q", .name = "cachesize", .handler = handle_cachesize },
  	{ .oid = -1 }
  };
  
-@@ -71,6 +150,32 @@ static const struct host_basic_info* gethostinfo(void)
+@@ -71,6 +159,41 @@ static const struct host_basic_info* gethostinfo(void)
  		hself = mach_host_self();
  		host_info(hself, HOST_BASIC_INFO, &hinfo, &hcount);
  		mach_port_deallocate(mach_task_self(), hself);
@@ -2012,10 +2021,19 @@ index f273989..058b985 100644
 +
 +		if (topo->detected && !topo->fixed)
 +		{
++			// darling-lol: when the core scan falls back to a 1:1 ratio, report
++			// SMT siblings like the masked Coffee Lake CPU (6 cores / 12 threads).
++			unsigned int physical = topo->physical_available;
++			unsigned int physical_max = topo->physical_online;
++
++			if (physical == topo->available && physical > 1 && physical % 2 == 0)
++				physical /= 2;
++			if (physical_max == topo->online && physical_max > 1 && physical_max % 2 == 0)
++				physical_max /= 2;
 +			hinfo.avail_cpus = topo->available;
 +			hinfo.max_cpus = topo->online;
-+			hinfo.physical_cpu = topo->physical_available;
-+			hinfo.physical_cpu_max = topo->physical_online;
++			hinfo.physical_cpu = physical;
++			hinfo.physical_cpu_max = physical_max;
 +			hinfo.logical_cpu = topo->available;
 +			hinfo.logical_cpu_max = topo->online;
 +		}
@@ -2029,7 +2047,7 @@ index f273989..058b985 100644
  	}
  
  	return &hinfo;
-@@ -83,6 +188,13 @@ sysctl_handler(handle_availcpu)
+@@ -83,6 +206,13 @@ sysctl_handler(handle_availcpu)
  	return 0;
  }
  
@@ -2043,12 +2061,15 @@ index f273989..058b985 100644
  sysctl_handler(handle_physicalcpu)
  {
  	sysctl_handle_size(sizeof(int));
-@@ -169,16 +281,49 @@ sysctl_handler(handle_cputhreadtype)
+@@ -169,18 +299,51 @@ sysctl_handler(handle_cputhreadtype)
  	return 0;
  }
  
+-sysctl_handler(handle_cpufrequency)
 +static long cpu_frequency(uint64_t* frequency)
-+{
+ {
+-	int freq = 2400000;
+-	char buf[16];
 +	char buffer[32];
 +	const char* paths[] = {
 +		"/Volumes/SystemRoot/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq",
@@ -2071,23 +2092,20 @@ index f273989..058b985 100644
 +#endif
 +	return -ENOENT;
 +}
-+
- sysctl_handler(handle_cpufrequency)
- {
--	int freq = 2400000;
--	char buf[16];
-+	uint64_t frequency;
-+	sysctl_handle_size(sizeof(frequency));
-+	long result = cpu_frequency(&frequency);
-+	if (!result) *((uint64_t*)old) = frequency;
-+	return result;
-+}
  
 -	if (read_string("/sys/bus/cpu/devices/cpu0/cpufreq/cpuinfo_max_freq", buf, sizeof(buf)))
 -		freq = __simple_atoi(buf, NULL);
 -	*((int*) old) = freq;
 -	
--	return 0;
++sysctl_handler(handle_cpufrequency)
++{
++	// darling-lol: the host's boost clock (5.1 GHz on Zen 4) contradicted the masked
++	// i7-9750H; macOS reports the nominal 2.6 GHz for that CPU.
++	sysctl_handle_size(sizeof(uint64_t));
++	*((uint64_t*) old) = 2600000000ULL;
+ 	return 0;
+ }
+ 
 +sysctl_handler(handle_cpufrequency_compat)
 +{
 +	// Numeric HW_CPU_FREQ retains XNU's legacy 32-bit ABI. Modern by-name
@@ -2097,10 +2115,12 @@ index f273989..058b985 100644
 +	long result = cpu_frequency(&frequency);
 +	if (!result) *((uint32_t*)old) = (uint32_t)frequency;
 +	return result;
- }
- 
++}
++
  sysctl_handler(handle_cpu64bitcapable)
-@@ -193,3 +338,104 @@ sysctl_handler(handle_machine)
+ {
+ 	sysctl_handle_size(sizeof(int));
+@@ -193,3 +356,113 @@ sysctl_handler(handle_machine)
  	copyout_string(need_uname()->machine, (char*) old, oldlen);
  	return 0;
  }
@@ -2168,6 +2188,15 @@ index f273989..058b985 100644
 +	return false;
 +}
 +
++// darling-lol: hw.packages was missing, so the Riot anti-cheat module's sysctlbyname()
++// call failed where every real Mac answers 1 (no Mac ships a multi-socket board).
++sysctl_handler(handle_packages)
++{
++	sysctl_handle_size(sizeof(int));
++	*((int*) old) = 1;
++	return 0;
++}
++
 +// hw.cacheconfig[0] is the number of logical CPUs, [n] the number of CPUs sharing a level n cache
 +sysctl_handler(handle_cacheconfig)
 +{
@@ -2206,7 +2235,7 @@ index f273989..058b985 100644
 +	return 0;
 +}
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_kern.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_kern.c
-index bd9cdc2..83ad15c 100644
+index bd9cdc2..de0fc89 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_kern.c
 +++ b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_kern.c
 @@ -139,18 +139,23 @@ sysctl_handler(handle_boottime)
@@ -2239,8 +2268,19 @@ index bd9cdc2..83ad15c 100644
  
  		// we don't want the microseconds to be constantly jumping around
  		// (that actually causes an infinite loop in `_mach_boottime_usec` in libc)
+@@ -213,7 +218,9 @@ sysctl_handler(handle_hostname)
+ 	int rv = 0;
+ 	
+ 	need_uname();
+-	copyout_string(lu.nodename, (char*) old, oldlen);
++	// darling-lol: the guest reported the Linux host's node name ("lowell"), which
++	// no Mac produces; a Mac's kernel host name is its LocalHostName plus ".local".
++	copyout_string("lowells-MacBook-Pro.local", (char*) old, oldlen);
+ 	
+ 	if (_new && newlen > 0)
+ 	{
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_machdep.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_machdep.c
-index 4319355..122ad3a 100644
+index 4319355..577dd10 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_machdep.c
 +++ b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_machdep.c
 @@ -4,6 +4,7 @@
@@ -2259,7 +2299,7 @@ index 4319355..122ad3a 100644
  };
  
  static sysctl_handler(handle_vendor);
-@@ -32,9 +34,15 @@ static sysctl_handler(handle_max_basic);
+@@ -32,9 +34,17 @@ static sysctl_handler(handle_max_basic);
  static sysctl_handler(handle_family);
  static sysctl_handler(handle_model);
  static sysctl_handler(handle_stepping);
@@ -2267,7 +2307,9 @@ index 4319355..122ad3a 100644
 -static sysctl_handler(handle_features);
 +static sysctl_handler(handle_brand_string)
 +{
-+	copyout_string("Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz", (char*) old, oldlen);
++	// darling-lol: the i7-9750H is the MacBookPro16,1 6-core/12-thread option,
++	// matching the 12 logical CPUs the host topology reports.
++	copyout_string("Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz", (char*) old, oldlen);
 +	return 0;
 +}
 +
@@ -2277,7 +2319,7 @@ index 4319355..122ad3a 100644
  
  const struct known_sysctl sysctls_machdep_cpu[] = {
      { .oid = _CPU_MAX_BASIC, .type = CTLTYPE_INT, .exttype = "I", .name = "max_basic", .handler = handle_max_basic },
-@@ -42,9 +50,10 @@ const struct known_sysctl sysctls_machdep_cpu[] = {
+@@ -42,9 +52,10 @@ const struct known_sysctl sysctls_machdep_cpu[] = {
      { .oid = _CPU_FAMILY, .type = CTLTYPE_INT, .exttype = "I", .name = "family", .handler = handle_family },
  		{ .oid = _CPU_MODEL, .type = CTLTYPE_INT, .exttype = "I", .name = "model", .handler = handle_model },
  		{ .oid = _CPU_STEPPING, .type = CTLTYPE_INT, .exttype = "I", .name = "stepping", .handler = handle_stepping },
@@ -2289,7 +2331,83 @@ index 4319355..122ad3a 100644
  	{ .oid = -1 }
  };
  
-@@ -154,38 +163,37 @@ sysctl_handler(handle_stepping)
+@@ -80,23 +91,10 @@ static inline void copyout_int(int value, char* to_copy, size_t* to_copy_length)
+ 
+ sysctl_handler(handle_vendor)
+ {
+-	unsigned int level = 0;
+-    unsigned int eax = 0;
+-	union
+-	{
+-		struct
+-		{
+-	    	unsigned int ebx;
+-		    unsigned int edx;
+-	    	unsigned int ecx;
+-		};
+-		char name[13];
+-	} v;
+-
+-    __cpuid(level, eax, v.ebx, v.ecx, v.edx);
+-
+-	v.name[12] = 0;
+-	copyout_string(v.name, (char*) old, oldlen);
++	// darling-lol: a Mac never reports the host CPUID vendor; the sysctl set is
++	// masked as one Coffee Lake MacBookPro16,1 CPU, so an AMD host does not answer
++	// "AuthenticAMD" next to an Intel brand string.
++	copyout_string("GenuineIntel", (char*) old, oldlen);
+ 
+ 	return 0;
+ }
+@@ -115,77 +113,62 @@ sysctl_handler(handle_max_basic)
+ 
+ sysctl_handler(handle_family)
+ {
+-    setup(1);
+-
+-    __cpuid(level, eax, ebx, ecx, edx);
+-
+-    eax = eax >> 7;
+-    eax &= 15;
+-
+-    copyout_int(eax, old, oldlen);
++    // darling-lol: fixed Coffee Lake identity (matches the brand string).
++    sysctl_handle_size(sizeof(int));
++    *((int*) old) = 6;
+ 
+     return 0;
+ }
+ 
+ sysctl_handler(handle_model)
+ {
+-    setup(1);
+-
+-    __cpuid(level, eax, ebx, ecx, edx);
+-
+-    eax = eax >> 3;
+-    eax &= 15;
+-
+-    copyout_int(eax,(char*)old, oldlen);
++    // darling-lol: fixed Coffee Lake identity: base model 0xE, extended 0x9.
++    sysctl_handle_size(sizeof(int));
++    *((int*) old) = 158;
+ 
+     return 0;
+ }
+ 
+ sysctl_handler(handle_stepping)
+ {
+-    setup(1);
+-
+-    __cpuid(level, eax, ebx, ecx, edx);
+-
+-    eax &= 15;
+-
+-    copyout_int(eax,(char*)old, oldlen);
++    // darling-lol: fixed Coffee Lake identity.
++    sysctl_handle_size(sizeof(int));
++    *((int*) old) = 10;
+ 
      return 0;
  }
  
@@ -2303,7 +2421,6 @@ index 4319355..122ad3a 100644
 -
 -    if (eax < 0x80000004) // the information is not implemented
 -        return 2;
--
 +	union
 +	{
 +		unsigned int brand[12];
@@ -2313,14 +2430,15 @@ index 4319355..122ad3a 100644
  
 +	__asm__("cpuid" : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx) : "0" (0x80000000u), "2" (0));
  
++	if (eax < 0x80000004) // the information is not implemented
++		return -ENOENT;
+ 
 -    union
 -    {
 -        unsigned int brand[12];
 -        char name[49];
 -    } v;
-+	if (eax < 0x80000004) // the information is not implemented
-+		return -ENOENT;
- 
+-
 -		for (int i = 1; i < 4; i++)
 -		{
 -				eax = 0x80000000+i;
@@ -2351,91 +2469,116 @@ index 4319355..122ad3a 100644
  
  sysctl_handler(handle_features)
  {
-@@ -269,45 +277,54 @@ sysctl_handler(handle_features)
+@@ -196,7 +179,9 @@ sysctl_handler(handle_features)
+                         "MCA", "CMOV", "PAT", "PSE-36", "PSN", "CLFSH", "", "DS", "ACPI", "MMX", "FXSR", "SSE", "SSE2", "SS",
+                         "HTT", "TM","IA64","PBE"};
+ 
+-    __cpuid(0,eax,ebx,ecx,edx);
++    // darling-lol: the host's real CPUID leaf 1 leaks AMD-only flag combinations.
++    // Report the Coffee Lake EDX set the brand string claims.
++    edx = 0xBFEBFBFF;
+     int current_length = 0;
+ 
+     if (old != NULL)
+@@ -269,45 +254,59 @@ sysctl_handler(handle_features)
  // TODO: i doubt core count is ever going to change.
  //       this is something that could be cached if we had some way of doing something only once in libsystem_kernel (i.e. a simple version of dispatch_once).
  sysctl_handler(handle_core_count) {
 -	// it's easier to use /proc/cpuinfo for this.
 -	// using cpuid directly is more difficult because AMD processors don't use the same method as Intel processors.
+-
+-	int infofd = sys_open_nocancel("/proc/cpuinfo", BSD_O_RDONLY, 0);
+-	struct rdline_buffer rbuf;
+-	const char* line;
+-
+-	// a reasonable default
+-	size_t core_count = 1;
+-
+-	if (infofd < 0)
+-		goto out;
+-
+-	_readline_init(&rbuf);
+-
+-	while ((line = _readline(infofd, &rbuf)) != NULL) {
+-		if (strncmp(line, "cpu cores", 9) != 0) {
+-			continue;
 +	// the topology probe (shared with the hw.* sysctls) reads the host's
 +	// package/core ids and caches the answer; fall back to /proc/cpuinfo when
 +	// the host doesn't expose /sys.
 +	const struct darling_cpu_topology* topo = darling_host_cpu_topology();
 +	size_t core_count = (topo->detected && !topo->fixed) ? topo->physical_online : 0;
++
++	// darling-lol: a 1:1 logical:physical ratio contradicts the masked SMT CPU.
++	if (topo->detected && !topo->fixed && core_count == topo->online
++			&& core_count > 1 && core_count % 2 == 0)
++		core_count /= 2;
 +	int infofd = -1;
- 
--	int infofd = sys_open_nocancel("/proc/cpuinfo", BSD_O_RDONLY, 0);
--	struct rdline_buffer rbuf;
--	const char* line;
++
 +	if (core_count == 0) {
 +		// it's easier to use /proc/cpuinfo for this.
 +		// using cpuid directly is more difficult because AMD processors don't use the same method as Intel processors.
- 
--	// a reasonable default
--	size_t core_count = 1;
++
 +		infofd = sys_open_nocancel("/proc/cpuinfo", BSD_O_RDONLY, 0);
 +		struct rdline_buffer rbuf;
 +		const char* line;
- 
--	if (infofd < 0)
--		goto out;
++
 +		// a reasonable default
 +		core_count = 1;
- 
--	_readline_init(&rbuf);
++
 +		if (infofd < 0)
 +			goto out;
- 
--	while ((line = _readline(infofd, &rbuf)) != NULL) {
--		if (strncmp(line, "cpu cores", 9) != 0) {
--			continue;
--		}
++
 +		_readline_init(&rbuf);
- 
--		// great, we've got "cpu cores"
--		// now find the actual number
--		while (*line != ':' && *line != '\0')
--			++line;
++
 +		while ((line = _readline(infofd, &rbuf)) != NULL) {
 +			if (strncmp(line, "cpu cores", 9) != 0) {
 +				continue;
 +			}
- 
--		// shouldn't happen, but just in case
--		if (*line == '\0')
--			continue;
++
 +			// great, we've got "cpu cores"
 +			// now find the actual number
 +			while (*line != ':' && *line != '\0')
 +				++line;
- 
--		++line; // skip the colon
--		if (*line == '\0')
--			continue;
++
 +			// shouldn't happen, but just in case
 +			if (*line == '\0')
 +				continue;
- 
--		++line; // skip the space
--		if (*line == '\0')
--			continue;
++
 +			++line; // skip the colon
 +			if (*line == '\0')
 +				continue;
- 
--		core_count = __simple_atoi(line, NULL);
--		break;
++
 +			++line; // skip the space
 +			if (*line == '\0')
 +				continue;
 +
 +			core_count = __simple_atoi(line, NULL);
 +			break;
-+		}
+ 		}
+-
+-		// great, we've got "cpu cores"
+-		// now find the actual number
+-		while (*line != ':' && *line != '\0')
+-			++line;
+-
+-		// shouldn't happen, but just in case
+-		if (*line == '\0')
+-			continue;
+-
+-		++line; // skip the colon
+-		if (*line == '\0')
+-			continue;
+-
+-		++line; // skip the space
+-		if (*line == '\0')
+-			continue;
+-
+-		core_count = __simple_atoi(line, NULL);
+-		break;
  	}
  
  out:
-@@ -319,3 +336,21 @@ out:
+@@ -319,3 +318,21 @@ out:
  		*oldlen = sizeof(uint32_t);
  	return 0;
  }
@@ -2458,10 +2601,18 @@ index 4319355..122ad3a 100644
 +	return 0;
 +}
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_net.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_net.c
-index 8fabdda..6cc204e 100644
+index 8fabdda..309c9c8 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_net.c
 +++ b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_net.c
-@@ -22,6 +22,7 @@ static sysctl_handler(handle_route);
+@@ -11,6 +11,7 @@
+ #include <darling/emulation/xnu_syscall/bsd/helper/network/duct.h>
+ #include <darling/emulation/xnu_syscall/bsd/impl/ioctl/ioctl.h>
+ #include <darling/emulation/xnu_syscall/bsd/impl/unistd/close.h>
++#include <darling/emulation/common/simple.h>
+ 
+ extern void* memset(void* destination, int value, size_t length);
+ extern void* memcpy(void* destination, const void* source, size_t n);
+@@ -22,6 +23,7 @@ static sysctl_handler(handle_route);
  static int do_iflist(void* old, unsigned long* oldlen);
  
  #define LINUX_SIOCGIFCONF 0x8912
@@ -2469,23 +2620,131 @@ index 8fabdda..6cc204e 100644
  #define LINUX_SIOCGIFHWADDR 0x8927
  #define LINUX_SIOCGIFBRDADDR 0x8919
  #define LINUX_SIOCGIFNETMASK 0x891b
-@@ -144,6 +145,16 @@ static int do_iflist(void* old, unsigned long* oldlen) {
+@@ -92,6 +94,75 @@ static unsigned long round_up_sizeof_u32(unsigned long number) {
+ 	return (number + (sizeof(uint32_t) - 1)) & ~(sizeof(uint32_t) - 1);
+ }
  
- 			memcpy(dl->sdl_data, curr->lifr_name, name_len);
++// darling-lol: the Riot anti-cheat module asks getifaddrs()/NET_RT_IFLIST, so the guest
++// used to report the Linux interface names (enp6s0, wlan0, docker0, veth...) and the
++// host's real MAC addresses. A Mac exposes lo0 plus en*/bridge*/utun* names, so map the
++// host list onto that shape and synthesize Apple-OUI MACs. Only this view changes; sockets
++// and ioctls keep using the host interfaces.
++#define DARLING_IF_NAME_MAX 16
++static const unsigned char kDarlingIfOui[3] = { 0x3c, 0x22, 0xfb }; /* Apple */
++
++static int darling_if_starts_with(const char* name, const char* prefix)
++{
++	while (*prefix) {
++		if (*name++ != *prefix++)
++			return 0;
++	}
++	return 1;
++}
++
++// Stable per-boot mapping: en0, en1, ... for physical adapters, bridgeN for bridge-like
++// host interfaces, utunN for tunnels. Virtual container links are still reported, as en
++// interfaces, because dropping them would hide host addresses from address enumeration.
++static void darling_map_ifname(const char* host, unsigned int* en, unsigned int* bridge,
++		unsigned int* utun, char* out)
++{
++	unsigned int value;
++
++	if (host[0] == 'l' && host[1] == 'o' && host[2] == '\0') {
++		strlcpy(out, "lo0", DARLING_IF_NAME_MAX);
++		return;
++	}
++	if (darling_if_starts_with(host, "docker") || darling_if_starts_with(host, "br-")
++			|| darling_if_starts_with(host, "virbr") || darling_if_starts_with(host, "bridge")) {
++		value = (*bridge)++;
++		__simple_sprintf(out, "bridge%u", value);
++		return;
++	}
++	if (darling_if_starts_with(host, "tun") || darling_if_starts_with(host, "tap")
++			|| darling_if_starts_with(host, "wg") || darling_if_starts_with(host, "utun")
++			|| darling_if_starts_with(host, "tailscale")) {
++		value = (*utun)++;
++		__simple_sprintf(out, "utun%u", value);
++		return;
++	}
++	value = (*en)++;
++	__simple_sprintf(out, "en%u", value);
++}
++
++// Deterministic MAC for a mapped name: Apple OUI plus three hash bytes. The real NIC keeps
++// its hardware address on the host side.
++static void darling_if_mac(const char* name, unsigned char* mac)
++{
++	unsigned long hash = 2166136261u;
++	const char* p = name;
++
++	if (name[0] == 'l' && name[1] == 'o' && name[2] == '0') {
++		memset(mac, 0, MAC_LENGTH);
++		return;
++	}
++	while (*p) {
++		hash ^= (unsigned char) *p++;
++		hash *= 16777619u;
++	}
++	mac[0] = kDarlingIfOui[0];
++	mac[1] = kDarlingIfOui[1];
++	mac[2] = kDarlingIfOui[2];
++	mac[3] = (unsigned char) (hash >> 8);
++	mac[4] = (unsigned char) (hash >> 16);
++	mac[5] = (unsigned char) (hash >> 24);
++}
++
+ static int do_iflist(void* old, unsigned long* oldlen) {
+ 	// we only do IPv4 addresses for now
+ 	int tmp_sock;
+@@ -103,6 +174,8 @@ static int do_iflist(void* old, unsigned long* oldlen) {
+ 	int status = 0;
+ 	char* old_ptr = old;
+ 	unsigned long total_len = 0;
++	unsigned int en_index = 0, bridge_index = 0, utun_index = 0;
++	char mapped_name[DARLING_IF_NAME_MAX];
  
+ 	if ((status = tmp_sock = sys_socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+ 		goto out;
+@@ -113,7 +186,12 @@ static int do_iflist(void* old, unsigned long* oldlen) {
+ 	for (int i = 0; i < lifc.lifc_len; i += sizeof(struct linux_ifreq)) {
+ 		struct linux_ifreq* curr = &lifc.lifc_req[i / sizeof(struct linux_ifreq)];
+ 		size_t name_len = strnlen(curr->lifr_name, sizeof(curr->lifr_name));
+-		size_t additional_sockaddr_len = name_len + MAC_LENGTH;
++		size_t additional_sockaddr_len;
++		unsigned char mapped_mac[MAC_LENGTH];
++
++		darling_map_ifname(curr->lifr_name, &en_index, &bridge_index, &utun_index, mapped_name);
++		name_len = strnlen(mapped_name, DARLING_IF_NAME_MAX);
++		additional_sockaddr_len = name_len + MAC_LENGTH;
+ 		additional_sockaddr_len = (additional_sockaddr_len <= sizeof(((struct sockaddr_dl*)NULL)->sdl_data)) ? 0 : (additional_sockaddr_len - sizeof(((struct sockaddr_dl*)NULL)->sdl_data));
+ 		size_t ifm_length = sizeof(struct if_msghdr) + round_up_sizeof_u32(sizeof(struct sockaddr_dl) + additional_sockaddr_len);
+ 		size_t ifam_length = sizeof(struct ifa_msghdr) + round_up_sizeof_u32(sizeof(struct sockaddr)) * 3;
+@@ -142,13 +220,21 @@ static int do_iflist(void* old, unsigned long* oldlen) {
+ 			dl->sdl_alen = MAC_LENGTH;
+ 			dl->sdl_slen = 0; // ???
+ 
+-			memcpy(dl->sdl_data, curr->lifr_name, name_len);
++			memcpy(dl->sdl_data, mapped_name, name_len);
+ 
+-			// grab the MAC
 +			/* Interface-list consumers (including Chromium) discard adapters
 +			 * without IFF_UP. Populate actual flags instead of leaving zero.
 +			 * The low ten flags share values; Linux multicast differs. */
-+			memcpy(tmp.lifr_name, curr->lifr_name, sizeof(curr->lifr_name));
+ 			memcpy(tmp.lifr_name, curr->lifr_name, sizeof(curr->lifr_name));
+-			if ((status = __real_ioctl(tmp_sock, LINUX_SIOCGIFHWADDR, &tmp)) < 0)
 +			if ((status = __real_ioctl(tmp_sock, LINUX_SIOCGIFFLAGS, &tmp)) < 0)
-+				goto out;
+ 				goto out;
+-			memcpy(LLADDR(dl), tmp.lifr_hwaddr.sa_data, MAC_LENGTH);
 +			unsigned short linux_flags = (unsigned short)tmp.lifr_flags;
 +			ifm->ifm_flags = linux_flags & 0x03ff;
 +			if (linux_flags & 0x1000) ifm->ifm_flags |= IFF_MULTICAST;
 +
- 			// grab the MAC
- 			memcpy(tmp.lifr_name, curr->lifr_name, sizeof(curr->lifr_name));
- 			if ((status = __real_ioctl(tmp_sock, LINUX_SIOCGIFHWADDR, &tmp)) < 0)
++			// report the synthesized MAC for the mapped name
++			darling_if_mac(mapped_name, mapped_mac);
++			memcpy(LLADDR(dl), mapped_mac, MAC_LENGTH);
+ 
+ 			old_ptr += ifm_length;
+ 		}
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_sysctl.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_sysctl.c
 index 5a49882..5dc5fa7 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/helper/misc/sysctl_sysctl.c

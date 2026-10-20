@@ -144,6 +144,31 @@ Previewing a fresh identity generates a sample; only `--write` makes it stable.
 To restore host-derived defaults after provisioning, remove both identity files
 while stopped, so a later provisioning run cannot reimport the legacy copy.
 
+## Masked hardware identity
+
+The Riot client sees a MacBookPro16,1-shaped machine, not the Linux host:
+
+- `machdep.cpu.vendor` is `GenuineIntel`, family 6, model 158, stepping 10 and the
+  brand string is `Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz`, the 6-core/12-thread
+  MacBookPro16,1 option. `machdep.cpu.features` reports the Coffee Lake leaf-1 EDX
+  set instead of the host CPUID flags. Logical CPU counts stay the host's, so the
+  mask matches a 6-core/12-thread Mac exactly; a 1:1 physical:logical ratio from
+  the core scan is halved to keep SMT siblings.
+- `kern.hostname` is `lowells-MacBook-Pro.local`; the Linux node name is not exposed.
+- `sw_vers` and `System/Library/CoreServices/SystemVersion.plist` report macOS
+  14.6 (build 23G80), matching `kern.osrelease` 23.6.0 and `kern.osversion` 23G80.
+  `SystemVersionCompat.plist` keeps the legacy 10.16 view, also with build 23G80.
+- `getifaddrs()`/`NET_RT_IFLIST` reports Mac-shaped interfaces: `lo0` for loopback,
+  `en0`.. for physical adapters, `bridgeN` for bridge-like host links and `utunN` for
+  tunnels, with deterministic Apple-OUI MACs (`3c:22:fb:..`). Host interface names and
+  hardware MACs are not exposed; sockets still use the host interfaces.
+- `MTLDevice.name` is the Mac GPU name (`DARLING_METAL_MAC_GPU_NAME`), see
+  [troubleshooting](TROUBLESHOOTING.md#metal-device-name-and-memory-budget).
+
+Not masked: the IORegistry itself (a real Mac exposes hundreds of nodes; the guest
+exposes a handful), MAC addresses, `/Volumes/SystemRoot` paths inside the guest, and
+the host library names in the process environment.
+
 ## system_profiler
 
 The prefix's `/usr/sbin/system_profiler` (installed by

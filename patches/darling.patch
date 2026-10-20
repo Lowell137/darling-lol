@@ -11368,3 +11368,52 @@ index 87db50d12..01a7b2a3e 100644
  	// std::ofstream m_dump;
  };
  
+diff --git a/src/frameworks/CoreServices/SystemVersion.plist b/src/frameworks/CoreServices/SystemVersion.plist
+index ee78ea54..8d33089f 100644
+--- a/src/frameworks/CoreServices/SystemVersion.plist
++++ b/src/frameworks/CoreServices/SystemVersion.plist
+@@ -3,16 +3,14 @@
+ <plist version="1.0">
+ <dict>
+ 	<key>ProductBuildVersion</key>
+-	<string>Darling</string>
++	<string>23G80</string>
+ 	<key>ProductCopyright</key>
+-	<string>2012-2023 Lubos Dolezel</string>
++	<string>1983-2024 Apple Inc.</string>
+ 	<key>ProductName</key>
+ 	<string>macOS</string>
+ 	<key>ProductUserVisibleVersion</key>
+-	<string>11.7.4</string>
++	<string>14.6</string>
+ 	<key>ProductVersion</key>
+-	<string>11.7.4</string>
+-	<key>iOSSupportVersion</key>
+-	<string>14.7</string>
++	<string>14.6</string>
+ </dict>
+ </plist>
+diff --git a/src/frameworks/CoreServices/SystemVersionCompat.plist b/src/frameworks/CoreServices/SystemVersionCompat.plist
+index 2ad16ea5..cc795886 100644
+--- a/src/frameworks/CoreServices/SystemVersionCompat.plist
++++ b/src/frameworks/CoreServices/SystemVersionCompat.plist
+@@ -3,9 +3,9 @@
+ <plist version="1.0">
+ <dict>
+ 	<key>ProductBuildVersion</key>
+-	<string>Darling</string>
++	<string>23G80</string>
+ 	<key>ProductCopyright</key>
+-	<string>2012-2023 Lubos Dolezel</string>
++	<string>1983-2024 Apple Inc.</string>
+ 	<key>ProductName</key>
+ 	<string>Mac OS X</string>
+ 	<key>ProductUserVisibleVersion</key>
+@@ -13,6 +13,6 @@
+ 	<key>ProductVersion</key>
+ 	<string>10.16</string>
+ 	<key>iOSSupportVersion</key>
+-	<string>14.7</string>
++	<string>17.6</string>
+ </dict>
+ </plist>
