@@ -207,6 +207,34 @@ If you start Darling manually in this shell, run `darling shutdown` there
 before exiting. A separately launched shell cannot reconnect to an existing
 Darling namespace; `darling-lol --stop` can still stop it.
 
+### Text fonts
+
+The FHS environment bundles Liberation and DejaVu text fonts and uses its own
+fontconfig configuration and standard aliases. It does not depend on fonts in
+the host's `/usr/share/fonts`, which the FHS environment replaces. Fonts in your
+user font directories remain available. This also prevents an icon-only user
+font inventory from becoming the only fallback for ordinary text.
+
+The FHS environment selects the packaged fontconfig configuration and clears
+inherited `FONTCONFIG_PATH` and `FONTCONFIG_SYSROOT` overrides. Clearing the
+sysroot prevents it from redirecting the packaged configuration and font paths.
+Custom XDG font/configuration directories and legacy
+`~/.fonts` remain supported, including paths with spaces. The host configuration
+and user font files are not modified.
+
+To check font availability without starting Darling or Riot:
+
+```sh
+nix run .#default -- fc-match sans-serif
+nix run .#default -- fc-match Arial
+```
+
+These should select DejaVu Sans and Liberation Sans respectively. The standalone
+`nix build .#checks.x86_64-linux.fonts` check verifies generic and common Windows
+font aliases with both an empty home directory and icon-only user fonts. This
+checks font availability; CAPTCHA text rendering still needs manual verification
+in Riot's UI.
+
 ## Files and operational limits
 
 - Workspace: `${XDG_DATA_HOME:-$HOME/.local/share}/darling-lol`.

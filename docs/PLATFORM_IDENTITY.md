@@ -6,7 +6,8 @@ A prefix without saved identity files keeps the host-derived UUID and
 `DARLING-` serial; launching never generates an override. Import mode uses
 values supplied by the user. `--provision` generates synthetic identifiers; it
 does not issue authentic Apple identities or change CPU, GPU, or security
-metadata.
+metadata. The overrides are for application compatibility; they are not intended
+to bypass anti-cheat, telemetry, licensing, or platform security controls.
 
 Preview an OpenCore `config.plist`, a flat GenSMBIOS JSON file, or an existing
 `darling-smbios.conf` without changing the selected prefix:

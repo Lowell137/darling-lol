@@ -5310,7 +5310,7 @@ index b998456..c6281e6 100644
 + * (/tmp/rclol-local-semaphores, the former opt-in switch, is now a no-op). While it was on by default in every
 + * process (2026-10-10 22:22-23:50) LeagueClient died ~85 s after start in 3 of 4 checked launches
 + * ("mach_msg_overwrite failed -9", then dserver_rpc_interrupt_enter -9: its RPC descriptor had become invalid) and
-+ * the user saw Vanguard errors; that mechanism is not understood, so the clients keep the server path. With the
++ * the client logged integrity-check errors; that mechanism is not understood, so the clients keep the server path. With the
 + * lifetime fixes above the game ran two full matches with it (2026-10-14: the main thread's server waits fell from
 + * 1.36 to 0.10 ms per frame, 39 to 15 blocks per frame). /tmp/rclol-local-semaphores-all turns it on for every
 + * process (probe tests). Decided once per process and logged

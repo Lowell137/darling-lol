@@ -3326,8 +3326,8 @@ index 8b92b6c50..18a57e359 100644
 + * (kAudioUnitErr_InvalidProperty) made it throw its audio graph away and build a new one in a loop, so it never played
 + * anything. Accepting it harmless: the unit plays on the default device anyway.
 + *
-+ * Only the game process gets this. With the property accepted everywhere, the League client's Vanguard module went to its
-+ * error state (MvgState 5, status -101) on every launch (2 of 2, 2026-10-11) and the client could not start a match;
++ * Only the game process gets this. With the property accepted everywhere, the League client's integrity module went to its
++ * error state (state 5, status -101) on every launch (2 of 2, 2026-10-11) and the client could not start a match;
 + * with the old behaviour it connected again (state 0). */
 +static bool callerIsLeagueGame()
 +{

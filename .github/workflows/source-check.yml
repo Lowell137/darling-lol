@@ -3,6 +3,12 @@ on: [push, pull_request]
 permissions:
   contents: read
 jobs:
+  nix-fonts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@3c6342b75005b9cc7c7d4069c3e9179247c89012 # v31
+      - run: nix build .#checks.x86_64-linux.fonts --no-link -L
   validate:
     runs-on: ubuntu-latest
     steps:
@@ -15,6 +21,8 @@ jobs:
       - run: python tools/riot-launcher-offline-check.py
       - run: python tools/riot-runtime-cleanup-offline-check.py
       - run: python tools/riot-cdn-dns-offline-check.py
+      - run: python -m unittest discover -s tests -p 'test_nix_fonts.py'
+      - run: python -m unittest discover -s tests -p 'test_nix_repairs.py'
       - run: python -m unittest discover -s tests -p 'test_hidden_riot_recovery.py'
       - run: python -m unittest discover -s tests -p 'test_desktop_run.py'
       - run: python -m unittest discover -s tests -p 'test_urlsession_runner.py'

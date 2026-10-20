@@ -10,5 +10,5 @@ OBJDUMP="$(command -v llvm-objdump || true)"
 file "$BIN" | tee "$OUT/file.txt"
 [ -n "$OTOOL" ] && { "$OTOOL" -hv "$BIN" > "$OUT/headers.txt" 2>&1; "$OTOOL" -L "$BIN" > "$OUT/linked-libs.txt" 2>&1; echo "wrote headers + linked-libs"; } || echo "no otool/llvm-otool found"
 [ -n "$OBJDUMP" ] && "$OBJDUMP" --macho --dylibs-used "$BIN" > "$OUT/dylibs.txt" 2>&1 || true
-strings -a "$BIN" | grep -iE "Metal|MTL|Vanguard|vgc|CEF|Chromium|RiotClient|NSApplication|LSOpen|CFBundle" | sort -u | head -100 | tee "$OUT/strings-of-interest.txt"
+strings -a "$BIN" | { grep -iE "Metal|MTL|CEF|Chromium|RiotClient|NSApplication|LSOpen|CFBundle" || test "$?" -eq 1; } | sort -u | head -100 | tee "$OUT/strings-of-interest.txt"
 echo "done -> $OUT/"

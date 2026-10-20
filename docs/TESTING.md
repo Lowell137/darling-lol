@@ -222,6 +222,31 @@ and prints `OPENPANEL_CHECK mode=interactive result=RETURNED code=... url=...`
 once it closes. As with the other probes, check the printed line rather than
 only the launcher exit status.
 
+### NSSavePanel Finder tags (`setTagNames:` / `tagNames`)
+
+`python3 tools/build-riot-save-panel-tag-check.py` builds
+`build/riot-save-panel-tag-check`. Install the patched AppKit first, with clients
+and the game closed. The probe checks selector availability, inheritance, and
+safe no-op semantics without launching any client or creating window fixtures:
+
+```sh
+P=/Volumes/SystemRoot/path/to/darling-lol/build/riot-save-panel-tag-check
+E="env DYLD_LIBRARY_PATH=/Users/me/RuntimeLibraries DYLD_FRAMEWORK_PATH=/Users/me/RuntimeFrameworks"
+darling shell $E $P
+```
+
+Expected output:
+
+```
+SAVE_PANEL_TAG class=NSSavePanel selectors=1 inherited=1 values=1 pass=1
+SAVE_PANEL_TAG class=NSOpenPanel selectors=1 inherited=1 values=1 pass=1
+SAVE_PANEL_TAG_CHECK pass=1
+```
+
+Cocotron does not persist Finder tag metadata or provide a tag UI. `setTagNames:`
+safely ignores input and `tagNames` returns an empty `NSArray` to prevent
+unrecognized-selector crashes from callers (such as Electron file dialogs).
+
 ### Presentation publisher handoff
 
 With clients closed, run `build/riot-client-resize-check --handoff` through Darling with the normal runtime overrides. This creates an owned window and two fixture frame slots. The live software owner first supplies a 1280×720 main frame, then switches to a 262×131 popup; another slot supplies the resized main frame without the software flag. The test samples its own window beyond the original frame extent and checks generation colors across growth and shrinkage. The old selector reports black at the 1600×900 sample; the correction passes all four sizes. Repeat with `RCLOL_XSHM=0` and with `DARLING_XSHM_LIBRARY` pointing to the normal transport to cover both paths. The fixtures remove their own frame slots on exit; they do not read client pixels or send input.

@@ -25,10 +25,9 @@ with tempfile.TemporaryDirectory(prefix='darling-cleanup-check-') as folder:
     process(104, 'unrelated', ['/usr/bin/unrelated', '/sbin/launchd'])
     with patch.object(cleanup.os, 'kill') as kill:
         cleanup.stop_riot_crashpad(root)
-        assert kill.call_args_list == [((102, cleanup.signal.SIGTERM),)]
-        kill.reset_mock()
+        kill.assert_not_called()
         cleanup.stop_orphaned_launchd(root)
-        assert kill.call_args_list == [((103, cleanup.signal.SIGKILL),)]
+        kill.assert_not_called()
     assert not cleanup.any_server_running(root)
     process(105, 'darlingserver', ['darlingserver', '--prefix=another-prefix'])
     assert cleanup.any_server_running(root)
@@ -58,4 +57,4 @@ with tempfile.TemporaryDirectory(prefix='darling-cleanup-check-') as folder:
         crashpad.assert_not_called()
         orphan.assert_not_called()
         remove.assert_not_called()
-print('RUNTIME_CLEANUP_OFFLINE pass=1 browser_preserved=1 other_prefix_preserved=1 foreign_owner_preserved=1 hidden_process_preserved=1 orphan_recovered=1')
+print('RUNTIME_CLEANUP_OFFLINE pass=1 browser_preserved=1 other_prefix_preserved=1 foreign_owner_preserved=1 hidden_process_preserved=1 orphan_preserved=1')

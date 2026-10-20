@@ -251,6 +251,27 @@ reference before callback delivery. This establishes the cancellation fix; a lon
 Riot session still needs confirmation. With both clients and the game closed,
 run `./scripts/update.sh` to install it, then `sh scripts/run.sh`.
 
+## League and Riot UIs crash after clicking Play
+
+The League UX processes and then the Riot Client renderer stop with `SIGTRAP`
+a few seconds after the lobby opens. The renderer prints
+`Check failed: kr == KERN_SUCCESS. mach_make_memory_entry_64: (os/kern) resource shortage (6)`
+from `platform_shared_memory_region_mac.cc`. darlingserver backs every named
+memory entry with a memfd, and its open descriptors peak at about 1100 when the
+lobby opens. Under the rootless NixOS launcher darlingserver cannot raise its
+hard `RLIMIT_NOFILE` to `nr_open`, so it used to keep the soft limit it
+inherited. When that limit was 1024 (several Electron apps and desktop launchers
+pass it on), `memfd_create` failed with `EMFILE`.
+
+darlingserver now raises its soft limit to the inherited hard limit when it
+cannot raise the hard one. A failed named-entry creation also logs
+`MEMDIAG … failed errno=… nofile=soft/hard` to `dserver.log`, and every 1024th
+memfd logs `MEMDIAG descriptors live=…` so a leak would show as a growing `live`
+count. With a 1024 soft limit the old server reproduced the crash and logged
+`errno=24 nofile=1024/524288`. With the fix, the server reports a 524288 soft
+limit under the same launch. To check a running server, read the `Max open files`
+line of `/proc/$(pgrep -x darlingserver)/limits`.
+
 ## UI crashes after a button opens an external link
 
 LaunchServices dereferenced a nullable error-output pointer in six paths. The patch checks the pointer itself and populates supplied outputs; the standalone regression covers missing handlers and null outputs. Electron opens LaunchServices through an absolute CoreServices subframework path, so the paired installer also replaces that binary in the stopped guest prefix. Updating only `RuntimeFrameworks/LaunchServices.framework` can leave the crash unfixed.
@@ -355,7 +376,7 @@ It prints each thread-local access that calls its thunk without the descriptor i
 
 ## Base install refuses to continue while Darling is not running
 
-`sudo cmake --install` prints `Darling currently running for <user>, shutting it down...` several times and then `Darling launchd PID … remains alive after shutdown`. A guest launchd outlived its darlingserver, so `darling shutdown` sees no container to stop. `python3 build/runtime/tools/ensure-darling-runtime.py` stops such a launchd (your own, only when no darlingserver runs); `scripts/run.sh` and `scripts/install-runtime.sh` run it too.
+`sudo cmake --install` prints `Darling currently running for <user>, shutting it down...` several times and then `Darling launchd PID … remains alive after shutdown`. A guest launchd outlived its darlingserver, so `darling shutdown` sees no container to stop. Automatic cleanup by process name is disabled because guest names and UIDs do not prove prefix ownership (killing by name risks terminating an active launchd from an unrelated prefix or session). If setup is blocked, shut down the original Darling session from its own namespace (`darling shutdown`), or inspect the leftover PID under `/proc/<PID>` before terminating it manually.
 
 ## Lower fight FPS than Windows
 

@@ -11408,7 +11408,7 @@ diff --git a/AppKit/NSSavePanel.subproj/NSSavePanel.m b/AppKit/NSSavePanel.subpr
 index 50c3d59e..be5a8463 100644
 --- a/AppKit/NSSavePanel.subproj/NSSavePanel.m
 +++ b/AppKit/NSSavePanel.subproj/NSSavePanel.m
-@@ -113,19 +113,108 @@
+@@ -113,19 +113,116 @@
      }
  }
  
@@ -11510,6 +11510,14 @@ index 50c3d59e..be5a8463 100644
 +    return NO;
 +}
 +
++- (void) setTagNames: (NSArray *) names {
++    (void)names;
++}
++
++- (NSArray *) tagNames {
++    return [NSArray array];
++}
++
 +- (void) setExtensionHidden: (BOOL) flag {
 +}
 +
@@ -11580,7 +11588,7 @@ diff --git a/AppKit/include/AppKit/NSSavePanel.h b/AppKit/include/AppKit/NSSaveP
 index 53bacc46..3c6adfb7 100644
 --- a/AppKit/include/AppKit/NSSavePanel.h
 +++ b/AppKit/include/AppKit/NSSavePanel.h
-@@ -88,6 +88,18 @@ enum {
+@@ -88,6 +88,20 @@ enum {
  - (void) setPrompt: (NSString *) message;
  - (NSString *) prompt;
  
@@ -11588,6 +11596,8 @@ index 53bacc46..3c6adfb7 100644
 +- (NSString *) nameFieldLabel;
 +- (void) setShowsTagField: (BOOL) flag;
 +- (BOOL) showsTagField;
++- (void) setTagNames: (NSArray *) names;
++- (NSArray *) tagNames;
 +- (void) setExtensionHidden: (BOOL) flag;
 +- (BOOL) isExtensionHidden;
 +- (void) setCanSelectHiddenExtension: (BOOL) flag;

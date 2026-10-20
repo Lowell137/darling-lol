@@ -440,6 +440,7 @@ class SessionTests(unittest.TestCase):
             self.assertFalse((root / 'other-prefix').exists())
 
     def test_first_run_eof_is_actionable_and_desktop_requests_terminal(self):
+        """Report missing terminal input without setup and package a terminal launcher."""
         with tempfile.TemporaryDirectory(prefix='nix-session-test-') as directory:
             root = Path(directory)
             (root / 'scripts').mkdir()
@@ -453,7 +454,8 @@ class SessionTests(unittest.TestCase):
             self.assertIn('terminal', result.stderr.lower())
             self.assertFalse((root / 'build').exists())
         self.assertIn('Terminal=true', (ROOT / 'flake.nix').read_text())
-        self.assertIn('checks.${system}.packaging', (ROOT / 'flake.nix').read_text())
+        self.assertIn('packaging = pkgs.runCommand "darling-lol-packaging-tests"',
+                      (ROOT / 'flake.nix').read_text())
 
     def test_rootless_update_refuses_live_marker_without_build_or_stop(self):
         with tempfile.TemporaryDirectory(prefix='nix-update-idle-') as directory:
