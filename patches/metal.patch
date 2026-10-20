@@ -3488,7 +3488,7 @@ diff --git a/private-include/Metal/MTLDeviceInfo.h b/private-include/Metal/MTLDe
 new file mode 100644
 --- /dev/null
 +++ b/private-include/Metal/MTLDeviceInfo.h
-@@ -0,0 +1,166 @@
+@@ -0,0 +1,165 @@
 +// SPDX-FileCopyrightText: 2026 Darling Developers
 +// SPDX-License-Identifier: MPL-2.0
 +
