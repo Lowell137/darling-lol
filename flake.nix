@@ -12,6 +12,14 @@
       pkgs = nixpkgs.legacyPackages.${system};
       llvmPackages = pkgs.llvmPackages_21;
 
+      # Host /etc/fonts survives buildFHSEnv, but host /usr/share/fonts does
+      # not. Use store paths for both text fonts and the standard alias rules.
+      darlingFonts = [ pkgs.liberation_ttf pkgs.dejavu_fonts ];
+      darlingFontsConf = pkgs.makeFontsConf {
+        fontDirectories = darlingFonts;
+        includes = [ "${pkgs.fontconfig.out}/etc/fonts/conf.d" ];
+      };
+
       # Python environment with dependencies required by tooling
       pythonEnv = pkgs.python3.withPackages (
         ps: with ps; [
@@ -155,6 +163,8 @@
           export DPREFIX="''${DPREFIX:-$HOME/.darling}"
           export LC_ALL=C.UTF-8
           export LANG=C.UTF-8
+          export FONTCONFIG_FILE=${darlingFontsConf}
+          export FONTCONFIG_PATH=${pkgs.fontconfig.out}/etc/fonts
           export DARLING_RUNNER_DIR=${darlingRunner}/bin
           export PATH="$DARLING_RUNNER_DIR:/usr/local/bin:''${PATH:-}"
           export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig:''${PKG_CONFIG_PATH:-}"
@@ -253,20 +263,55 @@ DESKTOP_EOF
       };
     in
     {
-      checks.${system}.packaging = pkgs.runCommand "darling-lol-packaging-tests" {
-        nativeBuildInputs = [ pythonEnv pkgs.bash pkgs.git pkgs.coreutils pkgs.util-linux pkgs.gawk ];
-      } ''
-        cp -R ${darlingLol}/share/darling-lol source
-        chmod -R u+w source
-        cd source
-        export HOME="$TMPDIR/home" PYTHONDONTWRITEBYTECODE=1
-        mkdir -p "$HOME"
-        # Tests use private stub binaries/repositories, never Darling itself.
-        python3 -m unittest discover -s tests -v
-        python3 scripts/validate.py
-        grep -q '^Terminal=true$' ${darlingLol}/share/applications/darling-lol.desktop
-        touch "$out"
-      '';
+      checks.${system} = {
+        fonts = pkgs.runCommand "darling-lol-font-tests" {
+          nativeBuildInputs = [ pkgs.fontconfig ];
+        } ''
+          export HOME="$TMPDIR/home" XDG_CONFIG_HOME="$TMPDIR/config"
+          export XDG_DATA_HOME="$TMPDIR/data" XDG_CACHE_HOME="$TMPDIR/cache"
+          export FONTCONFIG_FILE=${darlingFontsConf}
+          export FONTCONFIG_PATH=${pkgs.fontconfig.out}/etc/fonts
+          mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME"
+          # Check real font selection with no host or user text fonts available.
+          check_font() {
+            actual=$(fc-match --format '%{family}' "$1")
+            if [ "$actual" != "$2" ]; then
+              echo "Font match for $1: expected $2, got $actual" >&2
+              exit 1
+            fi
+            test -r "$(fc-match --format '%{file}' "$1")"
+          }
+          check_aliases() {
+            check_font sans-serif 'DejaVu Sans'
+            check_font serif 'DejaVu Serif'
+            check_font monospace 'DejaVu Sans Mono'
+            check_font Arial 'Liberation Sans'
+            check_font 'Times New Roman' 'Liberation Serif'
+            check_font 'Courier New' 'Liberation Mono'
+          }
+          check_aliases
+          # Reproduce an icon-only user inventory without host text fonts.
+          cp -R ${pkgs.font-awesome}/share/fonts "$XDG_DATA_HOME/fonts"
+          fc-list --format '%{file}\n' | grep -F "$XDG_DATA_HOME/fonts/"
+          check_aliases
+          touch "$out"
+        '';
+
+        packaging = pkgs.runCommand "darling-lol-packaging-tests" {
+          nativeBuildInputs = [ pythonEnv pkgs.bash pkgs.git pkgs.coreutils pkgs.util-linux pkgs.gawk ];
+        } ''
+          cp -R ${darlingLol}/share/darling-lol source
+          chmod -R u+w source
+          cd source
+          export HOME="$TMPDIR/home" PYTHONDONTWRITEBYTECODE=1
+          mkdir -p "$HOME"
+          # Tests use private stub binaries/repositories, never Darling itself.
+          python3 -m unittest discover -s tests -v
+          python3 scripts/validate.py
+          grep -q '^Terminal=true$' ${darlingLol}/share/applications/darling-lol.desktop
+          touch "$out"
+        '';
+      };
 
       packages.${system} = {
         darling-lol = darlingLol;
