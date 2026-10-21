@@ -3758,7 +3758,7 @@ index 0a8f1e4..a19f12e 100644
  
  	if (cmd != NULL)
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/sysctl.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/sysctl.c
-index 10f39a5..87051f7 100644
+index 10f39a5..95dab6b 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/sysctl.c
 +++ b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/sysctl.c
 @@ -1,4 +1,11 @@
@@ -3773,7 +3773,7 @@ index 10f39a5..87051f7 100644
  
  #include <sys/errno.h>
  #include <stddef.h>
-@@ -42,16 +49,59 @@ const struct known_sysctl sysctls_root = {
+@@ -42,16 +49,62 @@ const struct known_sysctl sysctls_root = {
  
  void copyout_string(const char* str, char* out, unsigned long* out_len)
  {
@@ -3819,7 +3819,10 @@ index 10f39a5..87051f7 100644
 +	if (fd < 0)
 +		return;
 +
-+	__simple_sprintf(body, "pid=%d result=%ld ", (int) LINUX_SYSCALL0(__NR_getpid), result);
++	struct { long seconds; long microseconds; } now = { 0, 0 };
++	LINUX_SYSCALL2(__NR_gettimeofday, &now, 0);
++	__simple_sprintf(body, "%ld pid=%d result=%ld ",
++			now.seconds, (int) LINUX_SYSCALL0(__NR_getpid), result);
 +	int body_len = 0;
 +	while (body[body_len] != '\0')
 +		body_len++;
@@ -3837,7 +3840,7 @@ index 10f39a5..87051f7 100644
  long sys_sysctl(int* name, unsigned int nlen, void* old,
  		unsigned long* oldlen, void* _new, unsigned long newlen)
  {
-@@ -130,7 +180,11 @@ long sys_sysctlbyname(const char* name, unsigned long namelen, void* old, unsign
+@@ -130,7 +183,11 @@ long sys_sysctlbyname(const char* name, unsigned long namelen, void* old, unsign
  		}
  
  		if (next == NULL)
@@ -3849,7 +3852,7 @@ index 10f39a5..87051f7 100644
  
  		current = next;
  		token = strtok_r(NULL, ".", &saveptr);
-@@ -139,5 +193,7 @@ long sys_sysctlbyname(const char* name, unsigned long namelen, void* old, unsign
+@@ -139,5 +196,7 @@ long sys_sysctlbyname(const char* name, unsigned long namelen, void* old, unsign
  	if (current->type == CTLTYPE_NODE)
  		return -EISDIR;
  
