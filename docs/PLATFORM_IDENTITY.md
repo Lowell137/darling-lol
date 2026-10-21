@@ -166,6 +166,22 @@ The Riot client sees a MacBookPro16,1-shaped machine, not the Linux host:
 - `MTLDevice.name` is the Mac GPU name (`DARLING_METAL_MAC_GPU_NAME`), see
   [troubleshooting](TROUBLESHOOTING.md#metal-device-name-and-memory-budget).
 
+### CPUID
+
+sysctl masks only cover code that asks the kernel. `mvg` also executes `cpuid`
+directly, which would expose the host's `AuthenticAMD` identity. With
+`DARLING_CPUID_FAULT=1` the loader enables `ARCH_SET_CPUID(0)` so every `cpuid`
+raises SIGSEGV; the existing `sigexc` handler answers the identity leaves
+(0, 1, 7, 0xB, 0x16, 0xD, 0x80000000-08) from the same Coffee Lake profile and
+passes every other leaf through to the real CPU with faulting briefly disabled.
+AVX-512 is cleared in leaves 7, 0xD and 0x80000001 because the emulated part has
+none. `tools/run-riot-client.sh` sets the variable by default; set
+`RCLOL_CPUID_FAULT=0` to disable it. The handler is compiled into dyld, so a
+`sudo cmake --install build` is required for changes to take effect. Verified in
+the guest with a Mach-O probe: `GenuineIntel`, leaf 1 `0x000906ea`, brand
+`Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz`, and host passthrough when the variable
+is unset.
+
 Not masked: the IORegistry itself (a real Mac exposes hundreds of nodes; the guest
 exposes a handful), MAC addresses, `/Volumes/SystemRoot` paths inside the guest, and
 the host library names in the process environment.
