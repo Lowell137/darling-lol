@@ -5295,10 +5295,10 @@ index 1098510..1741d5a 100644
  	return 0;
  }
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c
-index d1cdd3d..e9eed51 100644
+index d1cdd3d..9a99b2d 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c
 +++ b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c
-@@ -14,6 +14,56 @@
+@@ -14,6 +14,58 @@
  extern char *strtok_r(char *str, const char *delim, char **saveptr);
  extern unsigned long strlcpy(char* dst, const char* src, unsigned long size);
  
@@ -5315,7 +5315,9 @@ index d1cdd3d..e9eed51 100644
 +		"cgroup2", "mqueue", "nsfs", "bpf", "tracefs", "debugfs",
 +		"securityfs", "pstore", "configfs", "hugetlbfs", "fusectl",
 +		"binfmt_misc", "efivarfs", "autofs", "rpc_pipefs", "sunrpc",
-+		"fuse", "fuse.portal", "nfsd", "9p", 0
++		"fuse", "fuse.portal", "nfsd", "9p", "vfat", "exfat", "ntfs",
++		"ntfs3", "fuseblk", "squashfs", "iso9660", "udf", "cifs", "smb3",
++		"nfs", "nfs4", 0
 +	};
 +	static const char* const paths[] = {
 +		"/proc", "/sys", "/dev/pts", "/dev/shm", "/dev/mqueue", "/run",
@@ -5355,7 +5357,7 @@ index d1cdd3d..e9eed51 100644
  long sys_getfsstat(struct bsd_statfs* buf, int bufsize, int flags)
  {
  #ifdef __x86_64__
-@@ -43,28 +93,41 @@ long sys_getfsstat64(struct bsd_statfs64* buf, int bufsize, int flags)
+@@ -43,28 +95,42 @@ long sys_getfsstat64(struct bsd_statfs64* buf, int bufsize, int flags)
  		char* saveptr;
  		struct linux_statfs64 lbuf;
  
@@ -5389,7 +5391,8 @@ index d1cdd3d..e9eed51 100644
 -
 -			p = strtok_r(NULL, " ", &saveptr);
 -			if (p == NULL)
-+			skip = hidden_fs(source, mount, type);
++			/* The root volume is always kept; it is renamed to APFS below. */
++			skip = hidden_fs(source, mount, type) && !root_mount(mount);
 +			if (buf != NULL)
 +			{
 +				if (bufsize < sizeof(struct bsd_statfs64) * (count+1))
@@ -5412,7 +5415,7 @@ index d1cdd3d..e9eed51 100644
  
  #ifdef __NR_statfs64
  			if (LINUX_SYSCALL2(__NR_statfs64, (char*)buf[count].f_mntonname, &lbuf) < 0)
-@@ -74,11 +137,36 @@ long sys_getfsstat64(struct bsd_statfs64* buf, int bufsize, int flags)
+@@ -74,11 +140,36 @@ long sys_getfsstat64(struct bsd_statfs64* buf, int bufsize, int flags)
  				continue;
  
  			statfs_linux_to_bsd64(&lbuf, &buf[count]);
