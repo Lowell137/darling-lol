@@ -4000,10 +4000,170 @@ index 0000000..479294a
 +	return -ENOSYS;
 +}
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/proc_info.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/proc_info.c
-index c2f70fb..af904ed 100644
+index c2f70fb..f2031a3 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/proc_info.c
 +++ b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/proc_info.c
-@@ -83,6 +83,38 @@ long sys_proc_info(uint32_t callnum, int32_t pid, uint32_t flavor,
+@@ -44,6 +44,159 @@ extern char *strncpy(char *dest, const char *src, __SIZE_TYPE__ n);
+ extern int strncmp (const char * str1, const char * str2, __SIZE_TYPE__ num);
+ extern char *strchr(char *str, int character);
+ 
++
++/* darling-lol: a guest with no process list is not a Mac. Report a small,
++ * coherent set of system processes plus the running application instead of
++ * failing the call. The names match what these daemons are called on macOS
++ * so name scans see a normal machine; proc_pidinfo answers for these pids. */
++struct fake_proc {
++	int32_t pid;
++	const char* name;
++	const char* path;
++};
++
++static const struct fake_proc fake_procs[] = {
++	{   1, "launchd", "/sbin/launchd" },
++	{  55, "logd", "/usr/libexec/logd" },
++	{  57, "UserEventAgent", "/usr/libexec/UserEventAgent" },
++	{  60, "configd", "/usr/libexec/configd" },
++	{  62, "powerd", "/usr/libexec/powerd" },
++	{ 103, "mds", "/System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Support/mds" },
++	{ 104, "mds_stores", "/System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Versions/A/Support/mds_stores" },
++	{ 145, "WindowServer", "/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/Resources/WindowServer" },
++	{ 146, "loginwindow", "/System/Library/CoreServices/loginwindow.app/Contents/MacOS/loginwindow" },
++	{ 150, "distnoted", "/usr/sbin/distnoted" },
++	{ 151, "cfprefsd", "/usr/sbin/cfprefsd" },
++	{ 152, "opendirectoryd", "/usr/libexec/opendirectoryd" },
++	{ 153, "securityd", "/usr/sbin/securityd" },
++	{ 154, "notifyd", "/usr/sbin/notifyd" },
++	{ 155, "syslogd", "/usr/sbin/syslogd" },
++	{ 156, "coreaudiod", "/usr/sbin/coreaudiod" },
++	{ 157, "diskarbitrationd", "/usr/libexec/diskarbitrationd" },
++	{ 158, "nsurlsessiond", "/usr/libexec/nsurlsessiond" },
++	{ 159, "trustd", "/usr/libexec/trustd" },
++	{ 160, "tccd", "/System/Library/PrivateFrameworks/TCC.framework/Resources/tccd" },
++	{ 300, "Dock", "/System/Library/CoreServices/Dock.app/Contents/MacOS/Dock" },
++	{ 301, "Finder", "/System/Library/CoreServices/Finder.app/Contents/MacOS/Finder" },
++	{ 302, "SystemUIServer", "/System/Library/CoreServices/SystemUIServer.app/Contents/MacOS/SystemUIServer" },
++};
++
++#define FAKE_PROC_COUNT ((int) (sizeof(fake_procs) / sizeof(fake_procs[0])))
++
++static const struct fake_proc* fake_proc_find(int32_t pid)
++{
++	for (int i = 0; i < FAKE_PROC_COUNT; i++)
++		if (fake_procs[i].pid == pid)
++			return &fake_procs[i];
++	return 0;
++}
++
++static void copy_string(char* dst, const char* src, int size)
++{
++	int i = 0;
++	if (size <= 0)
++		return;
++	while (src[i] && i < size - 1) {
++		dst[i] = src[i];
++		i++;
++	}
++	dst[i] = 0;
++}
++
++/* The application's own name: basename of argv[0] as the loader left it. */
++static void fake_proc_self_name(char* out, int size)
++{
++	char buffer[512];
++	int fd = (int) LINUX_SYSCALL(__NR_open, (long) "/proc/self/cmdline", 0, 0);
++	long got = 0;
++	out[0] = 0;
++	if (fd < 0)
++		return;
++	got = LINUX_SYSCALL(__NR_read, fd, (long) buffer, (long) sizeof(buffer) - 1);
++	LINUX_SYSCALL(__NR_close, fd);
++	if (got <= 0)
++		return;
++	buffer[got] = 0;
++	const char* base = buffer;
++	for (long i = 0; i < got; i++) {
++		if (buffer[i] == '/')
++			base = buffer + i + 1;
++		if (!buffer[i])
++			break;
++	}
++	copy_string(out, base, size);
++}
++
++static int fake_proc_is(int32_t pid)
++{
++	return pid > 0 && pid == (int32_t) LINUX_SYSCALL(__NR_getpid, 0, 0, 0, 0, 0);
++}
++
++static long fake_pidinfo(int32_t pid, uint32_t flavor, void* buffer, int32_t bufsize)
++{
++	const struct fake_proc* entry = fake_proc_find(pid);
++	char self_name[32];
++	if (!entry && fake_proc_is(pid)) {
++		fake_proc_self_name(self_name, sizeof(self_name));
++		if (!self_name[0])
++			copy_string(self_name, "LeagueClientUx", sizeof(self_name));
++	}
++
++	if (!buffer)
++		return -EFAULT;
++
++	switch (flavor) {
++	case PROC_PIDTBSDINFO: {
++		struct proc_bsdinfo* info = (struct proc_bsdinfo*) buffer;
++		if (bufsize < (int32_t) sizeof(*info))
++			return -ENOSPC;
++		memset(info, 0, sizeof(*info));
++		info->pbi_flags = 2; /* 64-bit */
++		info->pbi_status = 2; /* SRUN */
++		info->pbi_pid = (uint32_t) pid;
++		info->pbi_ppid = 1;
++		info->pbi_uid = info->pbi_ruid = info->pbi_svuid = 501;
++		info->pbi_gid = info->pbi_rgid = info->pbi_svgid = 20;
++		info->pbi_pgid = (uint32_t) pid;
++		info->pbi_nfiles = 24;
++		info->pbi_start_tvsec = 1729000000;
++		copy_string(info->pbi_comm, entry ? entry->name : self_name, sizeof(info->pbi_comm));
++		copy_string(info->pbi_name, entry ? entry->name : self_name, sizeof(info->pbi_name));
++		return (long) sizeof(*info);
++	}
++	case PROC_PIDT_SHORTBSDINFO: {
++		struct proc_bsdshortinfo* info = (struct proc_bsdshortinfo*) buffer;
++		if (bufsize < (int32_t) sizeof(*info))
++			return -ENOSPC;
++		memset(info, 0, sizeof(*info));
++		info->pbsi_pid = (uint32_t) pid;
++		info->pbsi_ppid = 1;
++		info->pbsi_pgid = (uint32_t) pid;
++		info->pbsi_status = 2;
++		info->pbsi_flags = 2;
++		info->pbsi_uid = info->pbsi_ruid = info->pbsi_svuid = 501;
++		info->pbsi_gid = info->pbsi_rgid = info->pbsi_svgid = 20;
++		copy_string(info->pbsi_comm, entry ? entry->name : self_name, sizeof(info->pbsi_comm));
++		return (long) sizeof(*info);
++	}
++	case PROC_PIDPATHINFO:
++		copy_string((char*) buffer, entry ? entry->path : "/Applications/League of Legends.app/Contents/LoL/LeagueClient.app/Contents/MacOS/LeagueClient", bufsize);
++		return (long) strlen((char*) buffer) + 1;
++	case PROC_PIDTASKINFO: {
++		struct proc_taskinfo* info = (struct proc_taskinfo*) buffer;
++		if (bufsize < (int32_t) sizeof(*info))
++			return -ENOSPC;
++		memset(info, 0, sizeof(*info));
++		info->pti_threadnum = 1;
++		info->pti_resident_size = 8u * 1024u * 1024u;
++		info->pti_virtual_size = 64u * 1024u * 1024u;
++		return (long) sizeof(*info);
++	}
++	default:
++		return -ENOTSUP;
++	}
++}
++
+ long sys_proc_info(uint32_t callnum, int32_t pid, uint32_t flavor,
+ 		uint64_t arg, void* buffer, int32_t bufsize)
+ {
+@@ -83,7 +236,54 @@ long sys_proc_info(uint32_t callnum, int32_t pid, uint32_t flavor,
  		case 2: // proc_pidinfo
  			return _proc_pidinfo(pid, flavor, arg, buffer, bufsize);
  		case 3: // proc_pidfdinfo
@@ -4040,8 +4200,34 @@ index c2f70fb..af904ed 100644
 +			return -ENOTSUP;
 +		}
  		case 1: // proc_listpids
++		{
++			int32_t* out = (int32_t*) buffer;
++			int count = 0;
++			int cap = bufsize / (int32_t) sizeof(int32_t);
++			int32_t self = (int32_t) LINUX_SYSCALL(__NR_getpid, 0, 0, 0, 0, 0);
++
++			if (buffer == NULL)
++				return (FAKE_PROC_COUNT + 1) * (int32_t) sizeof(int32_t);
++
++			for (int i = 0; i < FAKE_PROC_COUNT && count < cap; i++)
++				out[count++] = fake_procs[i].pid;
++			if (count < cap)
++				out[count++] = self;
++			return count * (int32_t) sizeof(int32_t);
++		}
  		default:
  			__simple_printf("sys_proc_info(): Unsupported callnum: %d\n",
+ 					callnum);
+@@ -115,6 +315,9 @@ static long _proc_pidinfo_listthreads(int32_t pid, void* buffer, int32_t bufsize
+ 
+ long _proc_pidinfo(int32_t pid, uint32_t flavor, uint64_t arg, void* buffer, int32_t bufsize)
+ {
++	if (fake_proc_find(pid) != 0 || fake_proc_is(pid))
++		return fake_pidinfo(pid, flavor, buffer, bufsize);
++
+ 	switch (flavor)
+ 	{
+ 		// arg is a memory location we want to know about
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/ptrace.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/ptrace.c
 index 0a8f1e4..a19f12e 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/misc/ptrace.c
