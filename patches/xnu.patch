@@ -5295,10 +5295,10 @@ index 1098510..1741d5a 100644
  	return 0;
  }
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c
-index d1cdd3d..2672f19 100644
+index d1cdd3d..e9eed51 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c
 +++ b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c
-@@ -14,6 +14,43 @@
+@@ -14,6 +14,56 @@
  extern char *strtok_r(char *str, const char *delim, char **saveptr);
  extern unsigned long strlcpy(char* dst, const char* src, unsigned long size);
  
@@ -5319,12 +5319,25 @@ index d1cdd3d..2672f19 100644
 +	};
 +	static const char* const paths[] = {
 +		"/proc", "/sys", "/dev/pts", "/dev/shm", "/dev/mqueue", "/run",
-+		"/Volumes/SystemRoot", 0
++		"/tmp", "/var/lib", "/snap", "/media", "/mnt", "/Volumes/SystemRoot", 0
 +	};
 +	for (int i = 0; types[i]; i++) {
 +		const char* a = types[i]; const char* b = type;
 +		while (*a && *a == *b) { a++; b++; }
 +		if (!*a && !*b) return 1;
++	}
++	/* fuse subclasses (fuse.rclone, fuse.portal) and other FUSE names. */
++	{
++		const char* prefix = "fuse";
++		const char* a = prefix; const char* b = type;
++		while (*a && *a == *b) { a++; b++; }
++		if (!*a) return 1;
++	}
++	/* AppImage and other loop mounts. */
++	{
++		const char* a = "/dev/loop"; const char* b = source;
++		while (*a && *a == *b) { a++; b++; }
++		if (!*a) return 1;
 +	}
 +	for (int i = 0; paths[i]; i++) {
 +		const char* a = paths[i]; const char* b = mount;
@@ -5342,7 +5355,7 @@ index d1cdd3d..2672f19 100644
  long sys_getfsstat(struct bsd_statfs* buf, int bufsize, int flags)
  {
  #ifdef __x86_64__
-@@ -43,28 +80,41 @@ long sys_getfsstat64(struct bsd_statfs64* buf, int bufsize, int flags)
+@@ -43,28 +93,41 @@ long sys_getfsstat64(struct bsd_statfs64* buf, int bufsize, int flags)
  		char* saveptr;
  		struct linux_statfs64 lbuf;
  
@@ -5399,7 +5412,7 @@ index d1cdd3d..2672f19 100644
  
  #ifdef __NR_statfs64
  			if (LINUX_SYSCALL2(__NR_statfs64, (char*)buf[count].f_mntonname, &lbuf) < 0)
-@@ -74,6 +124,7 @@ long sys_getfsstat64(struct bsd_statfs64* buf, int bufsize, int flags)
+@@ -74,11 +137,36 @@ long sys_getfsstat64(struct bsd_statfs64* buf, int bufsize, int flags)
  				continue;
  
  			statfs_linux_to_bsd64(&lbuf, &buf[count]);
@@ -5407,6 +5420,35 @@ index d1cdd3d..2672f19 100644
  		}
  
  		count++;
+ 	}
+ 
+ 	close_internal(fd);
++
++	/* Every Mac lists the APFS system volumes besides the root. */
++	{
++		static const char* const extra_source[] = { "/dev/disk3s5", "/dev/disk3s6", "/dev/disk3s2", 0 };
++		static const char* const extra_mount[] = { "/System/Volumes/Data", "/System/Volumes/VM", "/System/Volumes/Preboot", 0 };
++
++		if (buf == NULL) {
++			for (int i = 0; extra_mount[i]; i++) count++;
++		} else {
++			int root = -1;
++			for (int i = 0; i < count; i++)
++				if (root_mount(buf[i].f_mntonname)) { root = i; break; }
++			for (int i = 0; extra_mount[i] && root >= 0; i++) {
++				if (bufsize < (int) (sizeof(struct bsd_statfs64) * (count + 1)))
++					break;
++				buf[count] = buf[root];
++				strlcpy(buf[count].f_mntfromname, extra_source[i], sizeof(buf[count].f_mntfromname));
++				strlcpy(buf[count].f_mntonname, extra_mount[i], sizeof(buf[count].f_mntonname));
++				strlcpy(buf[count].f_fstypename, "apfs", sizeof(buf[count].f_fstypename));
++				count++;
++			}
++		}
++	}
++
+ 	return count;
+ }
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/statfs.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/statfs.c
 index a6a5162..2155dc4 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/statfs.c
