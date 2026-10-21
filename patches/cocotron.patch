@@ -1,5 +1,5 @@
 diff --git a/AppKit/CMakeLists.txt b/AppKit/CMakeLists.txt
-index 393a1eb3..6a47ac89 100644
+index 393a1eb..6a47ac8 100644
 --- a/AppKit/CMakeLists.txt
 +++ b/AppKit/CMakeLists.txt
 @@ -1,5 +1,8 @@
@@ -20,7 +20,7 @@ index 393a1eb3..6a47ac89 100644
  		xkbfile
  )
 diff --git a/AppKit/MacWorkspace.m b/AppKit/MacWorkspace.m
-index ba52cd3b..d566b946 100644
+index ba52cd3..d566b94 100644
 --- a/AppKit/MacWorkspace.m
 +++ b/AppKit/MacWorkspace.m
 @@ -13,6 +13,32 @@
@@ -70,7 +70,7 @@ index ba52cd3b..d566b946 100644
  
  - (BOOL) selectFile: (NSString *) path
 diff --git a/AppKit/NSAccessibility.m b/AppKit/NSAccessibility.m
-index 39d1b104..3662bc4b 100644
+index 39d1b10..3662bc4 100644
 --- a/AppKit/NSAccessibility.m
 +++ b/AppKit/NSAccessibility.m
 @@ -13,6 +13,8 @@ NSString *const NSAccessibilityEnabledAttribute =
@@ -83,7 +83,7 @@ index 39d1b104..3662bc4b 100644
  NSString *const NSAccessibilityMaxValueAttribute =
          @"NSAccessibilityMaxValueAttribute";
 diff --git a/AppKit/NSAccessibilityRemoteUIElement.m b/AppKit/NSAccessibilityRemoteUIElement.m
-index d543e329..e320a3af 100644
+index d543e32..e320a3a 100644
 --- a/AppKit/NSAccessibilityRemoteUIElement.m
 +++ b/AppKit/NSAccessibilityRemoteUIElement.m
 @@ -23,6 +23,38 @@
@@ -331,7 +331,7 @@ index 8e7508e..dbc72de 100644
  
  - (void) deactivate {
 diff --git a/AppKit/NSBitmapImageRep.m b/AppKit/NSBitmapImageRep.m
-index 9a3f6a5d..dafb0cbe 100644
+index 9a3f6a5..dafb0cb 100644
 --- a/AppKit/NSBitmapImageRep.m
 +++ b/AppKit/NSBitmapImageRep.m
 @@ -795,6 +795,11 @@ NSBitmapImageRepPropertyKey NSImageCurrentFrame = @"NSImageCurrentFrame";
@@ -347,7 +347,7 @@ index 9a3f6a5d..dafb0cbe 100644
      if (![self hasAlpha])
          result |= kCGImageAlphaNone;
 diff --git a/AppKit/NSColor.subproj/NSColor.m b/AppKit/NSColor.subproj/NSColor.m
-index fb72c982..6a80b13f 100644
+index fb72c98..6a80b13 100644
 --- a/AppKit/NSColor.subproj/NSColor.m
 +++ b/AppKit/NSColor.subproj/NSColor.m
 @@ -21,6 +21,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -412,7 +412,7 @@ index fb72c982..6a80b13f 100644
                                 ofColor: (NSColor *) color
  {
 diff --git a/AppKit/NSColor.subproj/NSColor_CGColor.m b/AppKit/NSColor.subproj/NSColor_CGColor.m
-index 0aac5eec..1aa01fc8 100644
+index 0aac5ee..1aa01fc 100644
 --- a/AppKit/NSColor.subproj/NSColor_CGColor.m
 +++ b/AppKit/NSColor.subproj/NSColor_CGColor.m
 @@ -188,6 +188,15 @@ static inline CGFloat calibratedWhiteFromRGB(CGFloat r, CGFloat g, CGFloat b) {
@@ -468,7 +468,7 @@ index 0aac5eec..1aa01fc8 100644
          CGFloat red = components[0];
          CGFloat green = components[1];
 diff --git a/AppKit/NSColor.subproj/NSColor_catalog.m b/AppKit/NSColor.subproj/NSColor_catalog.m
-index 7361d09a..4bdd88cf 100644
+index 7361d09..4bdd88c 100644
 --- a/AppKit/NSColor.subproj/NSColor_catalog.m
 +++ b/AppKit/NSColor.subproj/NSColor_catalog.m
 @@ -19,6 +19,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -531,7 +531,7 @@ index 7361d09a..4bdd88cf 100644
      return [self CGColor];
  }
 diff --git a/AppKit/NSCursor.m b/AppKit/NSCursor.m
-index 4cd74633..4098fd28 100644
+index 4cd7463..4098fd2 100644
 --- a/AppKit/NSCursor.m
 +++ b/AppKit/NSCursor.m
 @@ -365,10 +365,7 @@ static NSMutableArray *_cursorStack = nil;
@@ -547,7 +547,7 @@ index 4cd74633..4098fd28 100644
  
  - initWithImage: (NSImage *) image
 diff --git a/AppKit/NSDisplay.m b/AppKit/NSDisplay.m
-index cacd8999..9422d869 100644
+index cacd899..9422d86 100644
 --- a/AppKit/NSDisplay.m
 +++ b/AppKit/NSDisplay.m
 @@ -43,6 +43,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -664,7 +664,7 @@ index cacd8999..9422d869 100644
      NSInvalidAbstractInvocation();
      return nil;
 diff --git a/AppKit/NSEvent.subproj/NSEvent.m b/AppKit/NSEvent.subproj/NSEvent.m
-index d0bad986..fecfa9f8 100644
+index d0bad98..fecfa9f 100644
 --- a/AppKit/NSEvent.subproj/NSEvent.m
 +++ b/AppKit/NSEvent.subproj/NSEvent.m
 @@ -29,6 +29,38 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -746,7 +746,7 @@ index d0bad986..fecfa9f8 100644
  
  @end
 diff --git a/AppKit/NSEvent.subproj/NSEvent_mouse.m b/AppKit/NSEvent.subproj/NSEvent_mouse.m
-index 31c65aac..f7d55ec0 100644
+index 31c65aa..f7d55ec 100644
 --- a/AppKit/NSEvent.subproj/NSEvent_mouse.m
 +++ b/AppKit/NSEvent.subproj/NSEvent_mouse.m
 @@ -18,6 +18,11 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
@@ -832,7 +832,7 @@ index 31c65aac..f7d55ec0 100644
  // a NSTrackingArea object on creation, yet they expose API to get that pointer.
  // Additionally, they state -trackingArea would deliver meaningful returns only
 diff --git a/AppKit/NSFont.m b/AppKit/NSFont.m
-index 2251b642..8b29725d 100644
+index 2251b64..8b29725 100644
 --- a/AppKit/NSFont.m
 +++ b/AppKit/NSFont.m
 @@ -288,6 +288,14 @@ static NSLock *_cacheLock = nil;
@@ -918,7 +918,7 @@ index 2251b642..8b29725d 100644
  }
 diff --git a/AppKit/NSGeometryTrace.h b/AppKit/NSGeometryTrace.h
 new file mode 100644
-index 00000000..a51a9241
+index 0000000..a51a924
 --- /dev/null
 +++ b/AppKit/NSGeometryTrace.h
 @@ -0,0 +1,25 @@
@@ -948,7 +948,7 @@ index 00000000..a51a9241
 +}
 +#endif
 diff --git a/AppKit/NSImage.m b/AppKit/NSImage.m
-index d2ac8e05..a4164f0a 100644
+index d2ac8e0..a4164f0 100644
 --- a/AppKit/NSImage.m
 +++ b/AppKit/NSImage.m
 @@ -1124,6 +1124,22 @@ NSImageName const NSImageNameTouchBarVolumeUpTemplate =
@@ -975,7 +975,7 @@ index d2ac8e05..a4164f0a 100644
              fromRect: (NSRect) source
             operation: (NSCompositingOperation) operation
 diff --git a/AppKit/NSMenu.subproj/NSMenu.m b/AppKit/NSMenu.subproj/NSMenu.m
-index e80e49d5..b72c4c0e 100644
+index e80e49d..b72c4c0 100644
 --- a/AppKit/NSMenu.subproj/NSMenu.m
 +++ b/AppKit/NSMenu.subproj/NSMenu.m
 @@ -493,6 +493,11 @@ BOOL itemIsEnabled(NSMenuItem *item) {
@@ -991,7 +991,7 @@ index e80e49d5..b72c4c0e 100644
      if ([_name isEqual: name])
          return self;
 diff --git a/AppKit/NSMenu.subproj/NSMenuItem.m b/AppKit/NSMenu.subproj/NSMenuItem.m
-index fd488111..cdb66811 100644
+index fd48811..cdb6681 100644
 --- a/AppKit/NSMenu.subproj/NSMenuItem.m
 +++ b/AppKit/NSMenu.subproj/NSMenuItem.m
 @@ -139,10 +139,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -1065,7 +1065,7 @@ index fd488111..cdb66811 100644
      [_onStateImage release];
      _onStateImage = [image retain];
 diff --git a/AppKit/NSResponder.m b/AppKit/NSResponder.m
-index f102391d..8ea0778f 100644
+index f102391..8ea0778 100644
 --- a/AppKit/NSResponder.m
 +++ b/AppKit/NSResponder.m
 @@ -30,6 +30,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -1111,7 +1111,7 @@ index f102391d..8ea0778f 100644
      [_nextResponder performSelector: _cmd withObject: event];
  }
 diff --git a/AppKit/NSRunningApplication.m b/AppKit/NSRunningApplication.m
-index 6c3d2688..2a7d078a 100644
+index 6c3d268..2a7d078 100644
 --- a/AppKit/NSRunningApplication.m
 +++ b/AppKit/NSRunningApplication.m
 @@ -1,4 +1,10 @@
@@ -1164,8 +1164,186 @@ index 6c3d2688..2a7d078a 100644
  + (NSArray<NSRunningApplication *> *) runningApplicationsWithBundleIdentifier: (NSString *) bundleIdentifier {
      printf("STUB %s\n", __PRETTY_FUNCTION__);
      return [NSArray array];
+diff --git a/AppKit/NSSavePanel.subproj/NSOpenPanel.m b/AppKit/NSSavePanel.subproj/NSOpenPanel.m
+index dfd3363..9388b18 100644
+--- a/AppKit/NSSavePanel.subproj/NSOpenPanel.m
++++ b/AppKit/NSSavePanel.subproj/NSOpenPanel.m
+@@ -23,6 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+ 
+ @interface NSSavePanel (Private)
+ - (void) _setFilename: (NSString *) filename;
++- (NSArray *) _selectedPaths;
++- (void) _setAcceptedPaths: (NSArray *) paths;
+ @end
+ 
+ @implementation NSOpenPanel
+@@ -92,7 +94,36 @@ static NSOpenPanel *_newPanel = nil;
+ 
+ - (void) _setFilename: (NSString *) filename {
+     [super _setFilename: filename];
+-    _filenames = [@[ filename ] retain];
++    [self _setAcceptedPaths: [filename length] > 0 ? @[ filename ] : @[]];
++}
++
++- (void) _setAcceptedPaths: (NSArray *) paths {
++    if (!_allowsMultipleSelection && [paths count] > 1)
++        paths = @[ [paths firstObject] ];
++    @synchronized(self) {
++        NSArray *copy = [paths copy];
++        [_filenames release];
++        _filenames = copy;
++    }
++    [super _setFilename: [paths firstObject]];
++}
++
++/* Open only accepts what the panel was configured to choose. With nothing
++ * selected, a directory chooser accepts the directory being shown. */
++- (NSArray *) _acceptablePaths {
++    NSFileManager *manager = [NSFileManager defaultManager];
++    NSMutableArray *result = [NSMutableArray array];
++    for (NSString *path in [self _selectedPaths]) {
++        BOOL isDirectory = NO;
++        if (![manager fileExistsAtPath: path isDirectory: &isDirectory])
++            continue;
++        if (isDirectory ? _canChooseDirectories : _canChooseFiles)
++            [result addObject: path];
++    }
++    if ([result count] == 0 && [[self _selectedPaths] count] == 0 &&
++        _canChooseDirectories && [[self directory] length] > 0)
++        [result addObject: [self directory]];
++    return result;
+ }
+ 
+ - (NSInteger) runModalForDirectory: (NSString *) directory
+diff --git a/AppKit/NSSavePanel.subproj/NSSavePanel.m b/AppKit/NSSavePanel.subproj/NSSavePanel.m
+index 50c3d59..7cedcf4 100644
+--- a/AppKit/NSSavePanel.subproj/NSSavePanel.m
++++ b/AppKit/NSSavePanel.subproj/NSSavePanel.m
+@@ -113,19 +113,116 @@ static NSSavePanel *_newPanel = nil;
+     }
+ }
+ 
+-- (IBAction) _selectFile: (id) sender {
+-    NSURL *url = [_outlineView itemAtRow: [_outlineView selectedRow]];
+-    [self _setFilename: [url path]];
++/* Paths of the rows selected in the file list. Safe with no selection. */
++- (NSArray *) _selectedPaths {
++    NSMutableArray *paths = [NSMutableArray array];
++    NSIndexSet *rows = [_outlineView selectedRowIndexes];
++    for (NSUInteger row = [rows firstIndex]; row != NSNotFound;
++         row = [rows indexGreaterThanIndex: row]) {
++        id item = [_outlineView itemAtRow: row];
++        if ([item isKindOfClass: [NSURL class]] && [[item path] length] > 0)
++            [paths addObject: [item path]];
++    }
++    return paths;
++}
++
++/* What the Open/Save button accepts: the selected rows, or with nothing
++ * selected the directory being shown. An empty result keeps the panel up. */
++- (NSArray *) _acceptablePaths {
++    NSArray *selected = [self _selectedPaths];
++    if ([selected count] > 0)
++        return selected;
++    if ([_directory length] > 0)
++        return @[ _directory ];
++    return @[];
++}
+ 
+-    [NSApp stopModalWithCode: NSOKButton];
++- (void) _setAcceptedPaths: (NSArray *) paths {
++    [self _setFilename: [paths firstObject]];
++}
++
++/* End the modal session this panel is running and take the panel off screen.
++ * The session is stopped only when this panel is the modal window, never
++ * another session that happens to be on top. The panel is hidden here as well
++ * so a dialog whose session cannot be stopped still goes away. */
++- (void) _dismissWithCode: (NSModalResponse) code {
++    if ([NSApp modalWindow] == self)
++        [NSApp stopModalWithCode: code];
++    [self orderOut: nil];
++}
++
++- (IBAction) _selectFile: (id) sender {
++    NSArray *paths = [self _acceptablePaths];
++    if ([paths count] == 0)
++        return;
++    @try {
++        [self _setAcceptedPaths: paths];
++    } @catch (NSException *exception) {
++        NSLog(@"NSSavePanel: could not record the chosen file: %@", exception);
++        [self _dismissWithCode: NSCancelButton];
++        return;
++    }
++    [self _dismissWithCode: NSOKButton];
+ }
+ 
+ - (IBAction) _cancel: (id) sender {
+-    [NSApp stopModalWithCode: NSCancelButton];
++    [self _dismissWithCode: NSCancelButton];
++}
++
++- (void) cancelOperation: (id) sender {
++    [self _cancel: sender];
+ }
+ 
++// Electron (Riot Client UI) opens its file dialogs through these and waits
++// for the handler; run the panel modally and report the result.
+ - (void) beginWithCompletionHandler: (void (^)(NSModalResponse result)) handler {
+-    NSUnimplementedMethod();
++    NSModalResponse result = [self runModal];
++    if (handler)
++        handler(result);
++}
++
++- (void) beginSheetModalForWindow: (NSWindow *) window
++                completionHandler: (void (^)(NSModalResponse result)) handler
++{
++    [self beginWithCompletionHandler: handler];
++}
++
++// Electron sets these unconditionally; Cocotron's panel has no tag field,
++// name label or extension toggle, so they are accepted and ignored.
++- (void) setNameFieldLabel: (NSString *) label {
++}
++
++- (NSString *) nameFieldLabel {
++    return nil;
++}
++
++- (void) setShowsTagField: (BOOL) flag {
++}
++
++- (BOOL) showsTagField {
++    return NO;
++}
++
++- (void) setTagNames: (NSArray *) names {
++    (void)names;
++}
++
++- (NSArray *) tagNames {
++    return [NSArray array];
++}
++
++- (void) setExtensionHidden: (BOOL) flag {
++}
++
++- (BOOL) isExtensionHidden {
++    return NO;
++}
++
++- (void) setCanSelectHiddenExtension: (BOOL) flag {
++}
++
++- (BOOL) canSelectHiddenExtension {
++    return NO;
+ }
+ 
+ - (NSInteger) runModalForDirectory: (NSString *) directory
 diff --git a/AppKit/NSScreen.m b/AppKit/NSScreen.m
-index 5ca58772..54b60ef5 100644
+index 5ca5877..54b60ef 100644
 --- a/AppKit/NSScreen.m
 +++ b/AppKit/NSScreen.m
 @@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -1211,7 +1389,7 @@ index 5ca58772..54b60ef5 100644
  
  @end
 diff --git a/AppKit/NSScroller.m b/AppKit/NSScroller.m
-index 6c361fa3..55027e7e 100644
+index 6c361fa..55027e7 100644
 --- a/AppKit/NSScroller.m
 +++ b/AppKit/NSScroller.m
 @@ -34,8 +34,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -1227,7 +1405,7 @@ index 6c361fa3..55027e7e 100644
  /* OS X has a global default "AppleScrollBarVariant" with the values: Single,
   DoubleMin, DoubleMax, and DoubleBoth This controls the default position of the
 diff --git a/AppKit/NSScrubberItemView.m b/AppKit/NSScrubberItemView.m
-index dea5e1d3..7b3a877b 100644
+index dea5e1d..7b3a877 100644
 --- a/AppKit/NSScrubberItemView.m
 +++ b/AppKit/NSScrubberItemView.m
 @@ -60,3 +60,17 @@
@@ -1249,7 +1427,7 @@ index dea5e1d3..7b3a877b 100644
 +
 +@end
 diff --git a/AppKit/NSSpeechSynthesizer.m b/AppKit/NSSpeechSynthesizer.m
-index 359607fc..2d365b8f 100644
+index 359607f..2d365b8 100644
 --- a/AppKit/NSSpeechSynthesizer.m
 +++ b/AppKit/NSSpeechSynthesizer.m
 @@ -18,6 +18,8 @@
@@ -1343,7 +1521,7 @@ index 8fecc9d..a9c8324 100644
  
  #pragma mark -
 diff --git a/AppKit/NSTextInput.m b/AppKit/NSTextInput.m
-index 9177a986..9c3c5ca3 100644
+index 9177a98..9c3c5ca 100644
 --- a/AppKit/NSTextInput.m
 +++ b/AppKit/NSTextInput.m
 @@ -1,10 +1,59 @@
@@ -1407,7 +1585,7 @@ index 9177a986..9c3c5ca3 100644
  
  @end
 diff --git a/AppKit/NSThemeFrame.m b/AppKit/NSThemeFrame.m
-index 0ec827c0..a24cd9f5 100644
+index 0ec827c..a24cd9f 100644
 --- a/AppKit/NSThemeFrame.m
 +++ b/AppKit/NSThemeFrame.m
 @@ -85,7 +85,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -1455,7 +1633,7 @@ index 0ec827c0..a24cd9f5 100644
      NSPoint origin = [[self window] frame].origin;
      NSPoint firstLocation =
 diff --git a/AppKit/NSTouchBarItem.m b/AppKit/NSTouchBarItem.m
-index c3f5d056..dbd93174 100644
+index c3f5d05..dbd9317 100644
 --- a/AppKit/NSTouchBarItem.m
 +++ b/AppKit/NSTouchBarItem.m
 @@ -27,6 +27,8 @@ NSTouchBarItemIdentifier const NSTouchBarItemIdentifierFlexibleSpace =
@@ -1468,7 +1646,7 @@ index c3f5d056..dbd93174 100644
          @"NSTouchBarItemIdentifierCharacterPicker";
  
 diff --git a/AppKit/NSView.m b/AppKit/NSView.m
-index 8ac2bbdc..a0fb4f37 100644
+index 8ac2bbd..a0fb4f3 100644
 --- a/AppKit/NSView.m
 +++ b/AppKit/NSView.m
 @@ -46,6 +46,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -2589,7 +2767,7 @@ index d545120..0f44069 100644
  
  + (BOOL) allowsAutomaticWindowTabbing {
 diff --git a/AppKit/NSWorkspace.m b/AppKit/NSWorkspace.m
-index ad5e4f9d..6e9cb1c9 100644
+index ad5e4f9..6e9cb1c 100644
 --- a/AppKit/NSWorkspace.m
 +++ b/AppKit/NSWorkspace.m
 @@ -20,9 +20,58 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -2712,7 +2890,7 @@ index ad5e4f9d..6e9cb1c9 100644
 -@end
 \ No newline at end of file
 diff --git a/AppKit/X11.backend/CarbonKeys.h b/AppKit/X11.backend/CarbonKeys.h
-index e999cbf2..14f9cb6a 100644
+index e999cbf..14f9cb6 100644
 --- a/AppKit/X11.backend/CarbonKeys.h
 +++ b/AppKit/X11.backend/CarbonKeys.h
 @@ -90,13 +90,14 @@ static const uint8_t x11ToCarbon[256] = {
@@ -2752,7 +2930,7 @@ index e999cbf2..14f9cb6a 100644
      [kVK_VolumeUp] = 123,
      [kVK_VolumeDown] = 122,
 diff --git a/AppKit/X11.backend/X11Cursor.m b/AppKit/X11.backend/X11Cursor.m
-index bdc97bdf..139c91eb 100644
+index bdc97bd..139c91e 100644
 --- a/AppKit/X11.backend/X11Cursor.m
 +++ b/AppKit/X11.backend/X11Cursor.m
 @@ -67,16 +67,16 @@
@@ -2779,7 +2957,7 @@ index bdc97bdf..139c91eb 100644
          _cursor = XcursorLibraryLoadCursor(display, "left_ptr");
      return self;
 diff --git a/AppKit/X11.backend/X11Display.h b/AppKit/X11.backend/X11Display.h
-index 18189404..12cde429 100644
+index 1818940..12cde42 100644
 --- a/AppKit/X11.backend/X11Display.h
 +++ b/AppKit/X11.backend/X11Display.h
 @@ -10,13 +10,19 @@
@@ -2849,7 +3027,7 @@ index 18189404..12cde429 100644
 +- (NSRect) frameForRootRect: (NSRect) rect;
  @end
 diff --git a/AppKit/X11.backend/X11Display.m b/AppKit/X11.backend/X11Display.m
-index 5ae29bf4..3a3c68f8 100644
+index 5ae29bf..3a3c68f 100644
 --- a/AppKit/X11.backend/X11Display.m
 +++ b/AppKit/X11.backend/X11Display.m
 @@ -48,12 +48,271 @@
@@ -4693,7 +4871,7 @@ index 5ae29bf4..3a3c68f8 100644
  
  @end
 diff --git a/AppKit/X11.backend/X11Pasteboard.h b/AppKit/X11.backend/X11Pasteboard.h
-index 411903cc..4b196afd 100644
+index 411903c..4b196af 100644
 --- a/AppKit/X11.backend/X11Pasteboard.h
 +++ b/AppKit/X11.backend/X11Pasteboard.h
 @@ -26,6 +26,7 @@ along with Darling.  If not, see <http://www.gnu.org/licenses/>.
@@ -4705,7 +4883,7 @@ index 411903cc..4b196afd 100644
      NSMutableDictionary<NSPasteboardType, NSData *> *_typeToData;
      NSMutableDictionary<NSPasteboardType, id<NSPasteboardTypeOwner>>
 diff --git a/AppKit/X11.backend/X11Pasteboard.m b/AppKit/X11.backend/X11Pasteboard.m
-index 0e91a5d1..9feeffa1 100644
+index 0e91a5d..9feeffa 100644
 --- a/AppKit/X11.backend/X11Pasteboard.m
 +++ b/AppKit/X11.backend/X11Pasteboard.m
 @@ -18,6 +18,8 @@ along with Darling.  If not, see <http://www.gnu.org/licenses/>.
@@ -5102,8 +5280,100 @@ index 0000000..31fa646
 +}
 +
 +#endif
+diff --git a/AppKit/X11.backend/X11SubWindow.h b/AppKit/X11.backend/X11SubWindow.h
+index 65b63a3..e5b913b 100644
+--- a/AppKit/X11.backend/X11SubWindow.h
++++ b/AppKit/X11.backend/X11SubWindow.h
+@@ -7,6 +7,10 @@
+     X11Window *_parent;
+     Display *_display;
+     Window _window;
++    CGRect _drawableFrame;
++    BOOL _visible;
++    BOOL _allowsParentDrawable;
++    BOOL _usingParentDrawable;
+ }
+ 
+ - initWithParentWindow: (X11Window *) parent frame: (CGRect) frame;
+diff --git a/AppKit/X11.backend/X11SubWindow.m b/AppKit/X11.backend/X11SubWindow.m
+index 738ab45..6596dab 100644
+--- a/AppKit/X11.backend/X11SubWindow.m
++++ b/AppKit/X11.backend/X11SubWindow.m
+@@ -1,6 +1,7 @@
+ #import "X11SubWindow.h"
+ #import "X11Display.h"
+ #import "X11Window.h"
++#import <AppKit/NSWindow.h>
+ 
+ @implementation X11SubWindow
+ 
+@@ -15,8 +16,9 @@
+ }
+ 
+ - (id) initWithParentWindow: (X11Window *) parent frame: (CGRect) frame {
+-    _parent = parent;
++    _parent = [parent retain];
+     frame = [self convertFrame: frame];
++    _drawableFrame = frame;
+ 
+     _display = [(X11Display *) [NSDisplay currentDisplay] display];
+ 
+@@ -31,7 +33,9 @@
+ }
+ 
+ - (void) dealloc {
++    if (_usingParentDrawable) [_parent releaseLayerDrawable: self];
+     XDestroyWindow(_display, _window);
++    [_parent release];
+     [super dealloc];
+ }
+ 
+@@ -39,16 +43,41 @@
+     return (void *) _window;
+ }
+ 
++- (void) setAllowsParentDrawable: (BOOL) allowed {
++    _allowsParentDrawable = allowed;
++}
++
++- (void *) sharedCGLWindow {
++    // Only a full-window borderless game view may draw into the managed parent.
++    // Other views keep independent child drawables and their own coordinates.
++    CGRect parentFrame = [_parent frame];
++    BOOL coversParent = _allowsParentDrawable && _visible && !([_parent styleMask] & NSTitledWindowMask) &&
++        CGRectEqualToRect(_drawableFrame, CGRectMake(0, 0, parentFrame.size.width, parentFrame.size.height));
++    void *surface = coversParent ? [_parent layerDrawableFor: self] : NULL;
++    BOOL usingParent = surface != NULL;
++    if (usingParent != _usingParentDrawable) {
++        if (usingParent) [_parent acquireLayerDrawable: self];
++        else [_parent releaseLayerDrawable: self];
++        _usingParentDrawable = usingParent;
++    }
++    if (_visible && !usingParent) XMapWindow(_display, _window);
++    else XUnmapWindow(_display, _window);
++    return surface;
++}
++
+ - (void) show {
+-    XMapWindow(_display, _window);
++    _visible = YES;
++    [self sharedCGLWindow];
+ }
+ 
+ - (void) hide {
+-    XUnmapWindow(_display, _window);
++    _visible = NO;
++    [self sharedCGLWindow];
+ }
+ 
+ - (void) setFrame: (CGRect) frame {
+     frame = [self convertFrame: frame];
++    _drawableFrame = frame;
+ 
+     XMoveResizeWindow(_display, _window, frame.origin.x, frame.origin.y,
+                       frame.size.width, frame.size.height);
 diff --git a/AppKit/X11.backend/X11Window.h b/AppKit/X11.backend/X11Window.h
-index bfe3839a..bc592711 100644
+index bfe3839..bc59271 100644
 --- a/AppKit/X11.backend/X11Window.h
 +++ b/AppKit/X11.backend/X11Window.h
 @@ -26,7 +26,7 @@
@@ -6372,7 +6642,7 @@ index f4925b6..b565b91 100644
                                                   frame: frame] autorelease];
  }
 diff --git a/AppKit/include/AppKit/NSAccessibilityConstants.h b/AppKit/include/AppKit/NSAccessibilityConstants.h
-index 282312de..03c75b2b 100644
+index 282312d..03c75b2 100644
 --- a/AppKit/include/AppKit/NSAccessibilityConstants.h
 +++ b/AppKit/include/AppKit/NSAccessibilityConstants.h
 @@ -9,6 +9,7 @@ APPKIT_EXPORT NSString *const NSAccessibilityContentsAttribute;
@@ -6384,7 +6654,7 @@ index 282312de..03c75b2b 100644
  APPKIT_EXPORT NSString *const NSAccessibilityMaxValueAttribute;
  APPKIT_EXPORT NSString *const NSAccessibilityMinValueAttribute;
 diff --git a/AppKit/include/AppKit/NSApplication.h b/AppKit/include/AppKit/NSApplication.h
-index a13138ae..32b97211 100644
+index a13138a..32b9721 100644
 --- a/AppKit/include/AppKit/NSApplication.h
 +++ b/AppKit/include/AppKit/NSApplication.h
 @@ -140,6 +140,7 @@ typedef NS_OPTIONS(NSUInteger, NSApplicationPresentationOptions) {
@@ -6404,7 +6674,7 @@ index a13138ae..32b97211 100644
  - (NSWindow *) makeWindowsPerform: (SEL) selector inOrder: (BOOL) inOrder;
  - (void) miniaturizeAll: sender;
 diff --git a/AppKit/include/AppKit/NSColor.h b/AppKit/include/AppKit/NSColor.h
-index b5ae3a65..6d555f60 100644
+index b5ae3a6..6d555f6 100644
 --- a/AppKit/include/AppKit/NSColor.h
 +++ b/AppKit/include/AppKit/NSColor.h
 @@ -29,6 +29,14 @@ typedef NSString *NSColorSpaceName;
@@ -6439,7 +6709,7 @@ index b5ae3a65..6d555f60 100644
  - (NSColor *) blendedColorWithFraction: (CGFloat) fraction
                                 ofColor: (NSColor *) color;
 diff --git a/AppKit/include/AppKit/NSDisplay.h b/AppKit/include/AppKit/NSDisplay.h
-index 8860a087..a897e2ce 100644
+index 8860a08..a897e2c 100644
 --- a/AppKit/include/AppKit/NSDisplay.h
 +++ b/AppKit/include/AppKit/NSDisplay.h
 @@ -22,15 +22,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -6479,7 +6749,7 @@ index 8860a087..a897e2ce 100644
  - (NSArray *) orderedWindowNumbers;
  
 diff --git a/AppKit/include/AppKit/NSEvent.h b/AppKit/include/AppKit/NSEvent.h
-index 0677f2e7..b6daef18 100644
+index 0677f2e..b6daef1 100644
 --- a/AppKit/include/AppKit/NSEvent.h
 +++ b/AppKit/include/AppKit/NSEvent.h
 @@ -83,6 +83,8 @@ typedef NS_ENUM(NSUInteger, NSEventType) {
@@ -6503,7 +6773,7 @@ index 0677f2e7..b6daef18 100644
  - (instancetype) initWithType: (NSEventType) type
                       location: (NSPoint) location
 diff --git a/AppKit/include/AppKit/NSFont.h b/AppKit/include/AppKit/NSFont.h
-index 3215013d..9f8bceb6 100644
+index 3215013..9f8bceb 100644
 --- a/AppKit/include/AppKit/NSFont.h
 +++ b/AppKit/include/AppKit/NSFont.h
 @@ -79,6 +79,7 @@ typedef enum {
@@ -6533,7 +6803,7 @@ index 3215013d..9f8bceb6 100644
  - (NSRect) boundingRectForGlyph: (NSGlyph) glyph;
  
 diff --git a/AppKit/include/AppKit/NSMenu.h b/AppKit/include/AppKit/NSMenu.h
-index aa776e1a..82873d60 100644
+index aa776e1..82873d6 100644
 --- a/AppKit/include/AppKit/NSMenu.h
 +++ b/AppKit/include/AppKit/NSMenu.h
 @@ -99,6 +99,11 @@ APPKIT_EXPORT const NSNotificationName NSMenuDidEndTrackingNotification;
@@ -6549,7 +6819,7 @@ index aa776e1a..82873d60 100644
  
  @interface NSObject (NSMenu_validateItem)
 diff --git a/AppKit/include/AppKit/NSMenuItem.h b/AppKit/include/AppKit/NSMenuItem.h
-index 5231496d..6c5eac59 100644
+index 5231496..6c5eac5 100644
 --- a/AppKit/include/AppKit/NSMenuItem.h
 +++ b/AppKit/include/AppKit/NSMenuItem.h
 @@ -45,6 +45,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -6587,7 +6857,7 @@ index 5231496d..6c5eac59 100644
  - (void) setOffStateImage: (NSImage *) image;
  - (void) setMixedStateImage: (NSImage *) image;
 diff --git a/AppKit/include/AppKit/NSNib.h b/AppKit/include/AppKit/NSNib.h
-index ff3f2d6f..40729e09 100644
+index ff3f2d6..40729e0 100644
 --- a/AppKit/include/AppKit/NSNib.h
 +++ b/AppKit/include/AppKit/NSNib.h
 @@ -42,5 +42,6 @@ APPKIT_EXPORT NSString *const NSNibTopLevelObjects;
@@ -6598,7 +6868,7 @@ index ff3f2d6f..40729e09 100644
  
  @end
 diff --git a/AppKit/include/AppKit/NSResponder.h b/AppKit/include/AppKit/NSResponder.h
-index 11dfac87..b595625e 100644
+index 11dfac8..b595625 100644
 --- a/AppKit/include/AppKit/NSResponder.h
 +++ b/AppKit/include/AppKit/NSResponder.h
 @@ -24,9 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -6625,7 +6895,7 @@ index 11dfac87..b595625e 100644
  - (void) rightMouseDown: (NSEvent *) event;
  - (void) rightMouseDragged: (NSEvent *) event;
 diff --git a/AppKit/include/AppKit/NSRunningApplication.h b/AppKit/include/AppKit/NSRunningApplication.h
-index c577764b..d8bb21cc 100644
+index c577764..d8bb21c 100644
 --- a/AppKit/include/AppKit/NSRunningApplication.h
 +++ b/AppKit/include/AppKit/NSRunningApplication.h
 @@ -18,6 +18,7 @@
@@ -6651,8 +6921,33 @@ index c577764b..d8bb21cc 100644
 +- (BOOL) activateWithOptions: (NSUInteger) options;
  
  @end
+diff --git a/AppKit/include/AppKit/NSSavePanel.h b/AppKit/include/AppKit/NSSavePanel.h
+index 53bacc4..5728b16 100644
+--- a/AppKit/include/AppKit/NSSavePanel.h
++++ b/AppKit/include/AppKit/NSSavePanel.h
+@@ -88,6 +88,20 @@ enum {
+ - (void) setPrompt: (NSString *) message;
+ - (NSString *) prompt;
+ 
++- (void) setNameFieldLabel: (NSString *) label;
++- (NSString *) nameFieldLabel;
++- (void) setShowsTagField: (BOOL) flag;
++- (BOOL) showsTagField;
++- (void) setTagNames: (NSArray *) names;
++- (NSArray *) tagNames;
++- (void) setExtensionHidden: (BOOL) flag;
++- (BOOL) isExtensionHidden;
++- (void) setCanSelectHiddenExtension: (BOOL) flag;
++- (BOOL) canSelectHiddenExtension;
++
++- (void) beginSheetModalForWindow: (NSWindow *) window
++                completionHandler: (void (^)(NSModalResponse result)) handler;
++
+ - (void) beginSheetForDirectory: (NSString *) path
+                            file: (NSString *) name
+                  modalForWindow: (NSWindow *) docWindow
 diff --git a/AppKit/include/AppKit/NSScrubberItemView.h b/AppKit/include/AppKit/NSScrubberItemView.h
-index 40042c89..37c1f4b6 100644
+index 40042c8..37c1f4b 100644
 --- a/AppKit/include/AppKit/NSScrubberItemView.h
 +++ b/AppKit/include/AppKit/NSScrubberItemView.h
 @@ -27,3 +27,6 @@
@@ -6663,7 +6958,7 @@ index 40042c89..37c1f4b6 100644
 +@interface NSScrubberImageItemView : NSScrubberItemView
 +@end
 diff --git a/AppKit/include/AppKit/NSSpeechSynthesizer.h b/AppKit/include/AppKit/NSSpeechSynthesizer.h
-index d8a6f6f1..a1c37d46 100644
+index d8a6f6f..a1c37d4 100644
 --- a/AppKit/include/AppKit/NSSpeechSynthesizer.h
 +++ b/AppKit/include/AppKit/NSSpeechSynthesizer.h
 @@ -38,7 +38,12 @@ APPKIT_EXPORT NSSpeechPropertyKey const NSSpeechRateProperty;
@@ -6680,7 +6975,7 @@ index d8a6f6f1..a1c37d46 100644
  
  @protocol NSSpeechSynthesizerDelegate <NSObject>
 diff --git a/AppKit/include/AppKit/NSSpellChecker.h b/AppKit/include/AppKit/NSSpellChecker.h
-index aaf2083b..41386be3 100644
+index aaf2083..41386be 100644
 --- a/AppKit/include/AppKit/NSSpellChecker.h
 +++ b/AppKit/include/AppKit/NSSpellChecker.h
 @@ -124,7 +124,7 @@ typedef NSInteger NSCorrectionResponse;
@@ -6693,7 +6988,7 @@ index aaf2083b..41386be3 100644
                                  range: (NSRange) range
                                  types: (NSTextCheckingTypes) checkingTypes
 diff --git a/AppKit/include/AppKit/NSTextInput.h b/AppKit/include/AppKit/NSTextInput.h
-index c9dfd7c7..413f5ac1 100644
+index c9dfd7c..413f5ac 100644
 --- a/AppKit/include/AppKit/NSTextInput.h
 +++ b/AppKit/include/AppKit/NSTextInput.h
 @@ -23,7 +23,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -6716,7 +7011,7 @@ index c9dfd7c7..413f5ac1 100644
  @end
  
 diff --git a/AppKit/include/AppKit/NSTouchBarItem.h b/AppKit/include/AppKit/NSTouchBarItem.h
-index 956712e1..528e7418 100644
+index 956712e..528e741 100644
 --- a/AppKit/include/AppKit/NSTouchBarItem.h
 +++ b/AppKit/include/AppKit/NSTouchBarItem.h
 @@ -30,6 +30,8 @@ APPKIT_EXPORT NSTouchBarItemIdentifier const
@@ -6729,7 +7024,7 @@ index 956712e1..528e7418 100644
  @interface NSTouchBarItem : NSObject <NSCoding>
  
 diff --git a/AppKit/include/AppKit/NSView.h b/AppKit/include/AppKit/NSView.h
-index edb45627..581991d1 100644
+index edb4562..581991d 100644
 --- a/AppKit/include/AppKit/NSView.h
 +++ b/AppKit/include/AppKit/NSView.h
 @@ -139,6 +139,12 @@ APPKIT_EXPORT const NSViewFullScreenModeOptionKey NSFullScreenModeApplicationPre
@@ -6857,7 +7152,7 @@ index a83c4d7..0eb69cb 100644
  - (NSRect) frameRectForContentRect: (NSRect) rect;
  - (NSRect) contentRectForFrameRect: (NSRect) rect;
 diff --git a/AppKit/nib.subproj/NSNib.m b/AppKit/nib.subproj/NSNib.m
-index 01dc29ad..63654d66 100644
+index 01dc29a..63654d6 100644
 --- a/AppKit/nib.subproj/NSNib.m
 +++ b/AppKit/nib.subproj/NSNib.m
 @@ -284,10 +284,8 @@ NSString *const NSNibTopLevelObjects = @"NSNibTopLevelObjects";
@@ -6874,7 +7169,7 @@ index 01dc29ad..63654d66 100644
  
  @end
 diff --git a/AppKit/private-include/AppKit/NSAccessibilityRemoteUIElement.h b/AppKit/private-include/AppKit/NSAccessibilityRemoteUIElement.h
-index 756d6078..51cbe463 100644
+index 756d607..51cbe46 100644
 --- a/AppKit/private-include/AppKit/NSAccessibilityRemoteUIElement.h
 +++ b/AppKit/private-include/AppKit/NSAccessibilityRemoteUIElement.h
 @@ -20,4 +20,14 @@
@@ -6893,7 +7188,7 @@ index 756d6078..51cbe463 100644
 +
  @end
 diff --git a/CoreGraphics/CGAffineTransform.m b/CoreGraphics/CGAffineTransform.m
-index aaeca762..0c04444e 100644
+index aaeca76..0c04444 100644
 --- a/CoreGraphics/CGAffineTransform.m
 +++ b/CoreGraphics/CGAffineTransform.m
 @@ -100,6 +100,18 @@ CGAffineTransform CGAffineTransformTranslate(CGAffineTransform xform,
@@ -6918,7 +7213,7 @@ index aaeca762..0c04444e 100644
 +    return CGRectMake(minX, minY, maxX - minX, maxY - minY);
  }
 diff --git a/CoreGraphics/CGColorSpace.m b/CoreGraphics/CGColorSpace.m
-index c84a2f75..e0ca9572 100644
+index c84a2f7..e0ca957 100644
 --- a/CoreGraphics/CGColorSpace.m
 +++ b/CoreGraphics/CGColorSpace.m
 @@ -37,6 +37,8 @@ const CFStringRef kCGColorSpaceACESCGLinear =
@@ -6943,7 +7238,7 @@ index c84a2f75..e0ca9572 100644
 +    return NULL;
 +}
 diff --git a/CoreGraphics/CGContext.m b/CoreGraphics/CGContext.m
-index db8869c8..6fea5107 100644
+index db8869c..6fea510 100644
 --- a/CoreGraphics/CGContext.m
 +++ b/CoreGraphics/CGContext.m
 @@ -614,8 +614,13 @@ void CGContextDrawTiledImage(CGContextRef c, CGRect rect, CGImageRef image)
@@ -6963,7 +7258,7 @@ index db8869c8..6fea5107 100644
 +    CGContextSetTextPosition(c, savedPosition.x, savedPosition.y);
  }
 diff --git a/CoreGraphics/CGDirectDisplay.m b/CoreGraphics/CGDirectDisplay.m
-index e213b066..9dc3da02 100644
+index e213b06..9dc3da0 100644
 --- a/CoreGraphics/CGDirectDisplay.m
 +++ b/CoreGraphics/CGDirectDisplay.m
 @@ -53,6 +53,29 @@ static NSDisplay *currentDisplay(void) {
@@ -7246,7 +7541,7 @@ index e213b066..9dc3da02 100644
 +    return false;
 +}
 diff --git a/CoreGraphics/CGDisplayStream.m b/CoreGraphics/CGDisplayStream.m
-index a9457e73..f9adca0d 100644
+index a9457e7..f9adca0 100644
 --- a/CoreGraphics/CGDisplayStream.m
 +++ b/CoreGraphics/CGDisplayStream.m
 @@ -20,3 +20,7 @@
@@ -7258,7 +7553,7 @@ index a9457e73..f9adca0d 100644
 +const CFStringRef kCGDisplayStreamMinimumFrameTime = CFSTR("kCGDisplayStreamMinimumFrameTime");
 +const CFStringRef kCGDisplayStreamPreserveAspectRatio = CFSTR("kCGDisplayStreamPreserveAspectRatio");
 diff --git a/CoreGraphics/CGEventSource.m b/CoreGraphics/CGEventSource.m
-index 537c67ae..0bffcd36 100644
+index 537c67a..0bffcd3 100644
 --- a/CoreGraphics/CGEventSource.m
 +++ b/CoreGraphics/CGEventSource.m
 @@ -76,3 +76,22 @@ CGEventFlags CGEventSourceFlagsState(CGEventSourceStateID stateID) {
@@ -7285,7 +7580,7 @@ index 537c67ae..0bffcd36 100644
 +    return 0;
 +}
 diff --git a/CoreGraphics/CGFont.m b/CoreGraphics/CGFont.m
-index bcd822fd..51e89ae2 100644
+index bcd822f..51e89ae 100644
 --- a/CoreGraphics/CGFont.m
 +++ b/CoreGraphics/CGFont.m
 @@ -96,11 +96,27 @@ CFDataRef CGFontCopyTableForTag(CGFontRef self, uint32_t tag) {
@@ -7319,7 +7614,7 @@ index bcd822fd..51e89ae2 100644
 +    return (CFStringRef)[(O2Font *)self copyPostScriptName];
 +}
 diff --git a/CoreGraphics/CGSConnection.m b/CoreGraphics/CGSConnection.m
-index 99826d19..0b75047b 100644
+index 99826d1..0b75047 100644
 --- a/CoreGraphics/CGSConnection.m
 +++ b/CoreGraphics/CGSConnection.m
 @@ -94,6 +94,11 @@
@@ -7335,13 +7630,58 @@ index 99826d19..0b75047b 100644
  {
  	CGSWindow* win = [self windowForId: winId];
 diff --git a/CoreGraphics/CGSWindow.m b/CoreGraphics/CGSWindow.m
-index e1da261d..f050b6e8 100644
+index e1da261..96aba2a 100644
 --- a/CoreGraphics/CGSWindow.m
 +++ b/CoreGraphics/CGSWindow.m
-@@ -101,6 +101,47 @@ CGError CGSSetWindowTitle(CGSConnectionID cid, CGSWindowID wid,
+@@ -101,6 +101,100 @@ CGError CGSSetWindowTitle(CGSConnectionID cid, CGSWindowID wid,
      return CGSSetWindowProperty(cid, wid, kCGSWindowTitle, title);
  }
  
++// darling-lol: a Mac always has the desktop, Dock and menu bar windows. The guest's
++// display server reports none, which is not a state macOS can be in and is easy to
++// spot from userspace. Fill a plausible list when the real one is empty.
++static NSDictionary* syntheticWindowInfo(unsigned number, pid_t ownerPid, NSString* ownerName,
++                                         NSString* windowName, int layer, NSDictionary* bounds)
++{
++	return [NSDictionary dictionaryWithObjectsAndKeys:
++		[NSNumber numberWithUnsignedInt: number], (NSString*) kCGWindowNumber,
++		[NSNumber numberWithInt: ownerPid], (NSString*) kCGWindowOwnerPID,
++		ownerName, (NSString*) kCGWindowOwnerName,
++		windowName, (NSString*) kCGWindowName,
++		[NSNumber numberWithInt: layer], (NSString*) kCGWindowLayer,
++		[NSNumber numberWithBool: YES], (NSString*) kCGWindowIsOnscreen,
++		[NSNumber numberWithFloat: 1.0f], (NSString*) kCGWindowAlpha,
++		bounds, (NSString*) kCGWindowBounds,
++		nil];
++}
++
++static NSArray* syntheticWindowList(void)
++{
++	NSString* appName = nil;
++	NSArray* arguments = [[NSProcessInfo processInfo] arguments];
++	if ([arguments count] > 0)
++		appName = [[arguments objectAtIndex: 0] lastPathComponent];
++	if (![appName length])
++		appName = [[NSProcessInfo processInfo] processName];
++
++	NSDictionary* fullScreen = [NSDictionary dictionaryWithObjectsAndKeys:
++		[NSNumber numberWithInt: 0], @"X", [NSNumber numberWithInt: 0], @"Y",
++		[NSNumber numberWithInt: 1920], @"Width", [NSNumber numberWithInt: 1080], @"Height", nil];
++	NSDictionary* menuBar = [NSDictionary dictionaryWithObjectsAndKeys:
++		[NSNumber numberWithInt: 0], @"X", [NSNumber numberWithInt: 0], @"Y",
++		[NSNumber numberWithInt: 1920], @"Width", [NSNumber numberWithInt: 24], @"Height", nil];
++	NSDictionary* dock = [NSDictionary dictionaryWithObjectsAndKeys:
++		[NSNumber numberWithInt: 0], @"X", [NSNumber numberWithInt: 1020], @"Y",
++		[NSNumber numberWithInt: 1920], @"Width", [NSNumber numberWithInt: 60], @"Height", nil];
++
++	NSMutableArray* windows = [[NSMutableArray alloc] init];
++	[windows addObject: syntheticWindowInfo(1201, getpid(), appName, appName, 0, fullScreen)];
++	[windows addObject: syntheticWindowInfo(1202, 301, @"Finder", @"Desktop", -2147483623, fullScreen)];
++	[windows addObject: syntheticWindowInfo(1203, 300, @"Dock", @"Dock", 20, dock)];
++	[windows addObject: syntheticWindowInfo(1204, 302, @"SystemUIServer", @"SystemUIServer", 25, menuBar)];
++	return windows;
++}
++
 +// Windows of every client of the display server, front to back. The option and the reference
 +// window select the same subsets as on macOS.
 +CFArrayRef __nullable CGWindowListCopyWindowInfo(CGWindowListOption option, CGWindowID relativeToWindow)
@@ -7380,14 +7720,37 @@ index e1da261d..f050b6e8 100644
 +	}
 +
 +	[all release];
++
++	if ([selected count] == 0)
++	{
++		NSArray* fallback = syntheticWindowList();
++		[selected release];
++		return (CFArrayRef) fallback;
++	}
++
 +	return (CFArrayRef) selected;
 +}
 +
  CFArrayRef __nullable CGWindowListCreate(CGWindowListOption option, CGWindowID relativeToWindow)
  {
      printf("STUB %s\n", __PRETTY_FUNCTION__);
+diff --git a/CoreGraphics/CGSubWindow.m b/CoreGraphics/CGSubWindow.m
+index 008ccd7..6692deb 100644
+--- a/CoreGraphics/CGSubWindow.m
++++ b/CoreGraphics/CGSubWindow.m
+@@ -8,6 +8,10 @@
+     return NULL;
+ }
+ 
++// Backends may lend an existing EGL surface for full-window layer rendering.
++- (void *) sharedCGLWindow { return NULL; }
++- (void) setAllowsParentDrawable: (BOOL) allowed {}
++
+ - (void) show {
+     O2InvalidAbstractInvocation();
+ }
 diff --git a/CoreGraphics/CGWindowLevel.m b/CoreGraphics/CGWindowLevel.m
-index e03fbf80..a0206b07 100644
+index e03fbf8..a0206b0 100644
 --- a/CoreGraphics/CGWindowLevel.m
 +++ b/CoreGraphics/CGWindowLevel.m
 @@ -1,6 +1,33 @@
@@ -7426,7 +7789,7 @@ index e03fbf80..a0206b07 100644
 +    return levels[key];
  }
 diff --git a/CoreGraphics/X11.backend/CGSConnectionX11.h b/CoreGraphics/X11.backend/CGSConnectionX11.h
-index 5437acb5..07f7eb4f 100644
+index 5437acb..07f7eb4 100644
 --- a/CoreGraphics/X11.backend/CGSConnectionX11.h
 +++ b/CoreGraphics/X11.backend/CGSConnectionX11.h
 @@ -48,6 +48,7 @@
@@ -7438,7 +7801,7 @@ index 5437acb5..07f7eb4f 100644
  +(BOOL) isAvailable;
  
 diff --git a/CoreGraphics/X11.backend/CGSConnectionX11.m b/CoreGraphics/X11.backend/CGSConnectionX11.m
-index 7af8bd93..90420b6f 100644
+index 7af8bd9..90420b6 100644
 --- a/CoreGraphics/X11.backend/CGSConnectionX11.m
 +++ b/CoreGraphics/X11.backend/CGSConnectionX11.m
 @@ -18,6 +18,7 @@
@@ -7579,7 +7942,7 @@ index 7af8bd93..90420b6f 100644
  {
  	@synchronized (self)
 diff --git a/CoreGraphics/include/CoreGraphics/CGColorSpace.h b/CoreGraphics/include/CoreGraphics/CGColorSpace.h
-index 2f5674ff..0eec27b9 100644
+index 2f5674f..0eec27b 100644
 --- a/CoreGraphics/include/CoreGraphics/CGColorSpace.h
 +++ b/CoreGraphics/include/CoreGraphics/CGColorSpace.h
 @@ -27,6 +27,8 @@ COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericLab;
@@ -7592,7 +7955,7 @@ index 2f5674ff..0eec27b9 100644
  COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceDCIP3;
  COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceExtendedSRGB;
 diff --git a/CoreGraphics/include/CoreGraphics/CGDirectDisplay.h b/CoreGraphics/include/CoreGraphics/CGDirectDisplay.h
-index dd3f5479..f17543d7 100644
+index dd3f547..f17543d 100644
 --- a/CoreGraphics/include/CoreGraphics/CGDirectDisplay.h
 +++ b/CoreGraphics/include/CoreGraphics/CGDirectDisplay.h
 @@ -2,6 +2,8 @@
@@ -7616,7 +7979,7 @@ index dd3f5479..f17543d7 100644
 +COREGRAPHICS_EXPORT bool CGPreflightScreenCaptureAccess(void);
 +COREGRAPHICS_EXPORT bool CGRequestScreenCaptureAccess(void);
 diff --git a/CoreGraphics/include/CoreGraphics/CGDisplayStream.h b/CoreGraphics/include/CoreGraphics/CGDisplayStream.h
-index ad289284..856d5009 100644
+index ad28928..856d500 100644
 --- a/CoreGraphics/include/CoreGraphics/CGDisplayStream.h
 +++ b/CoreGraphics/include/CoreGraphics/CGDisplayStream.h
 @@ -20,3 +20,7 @@
@@ -7628,7 +7991,7 @@ index ad289284..856d5009 100644
 +COREGRAPHICS_EXPORT const CFStringRef kCGDisplayStreamMinimumFrameTime;
 +COREGRAPHICS_EXPORT const CFStringRef kCGDisplayStreamPreserveAspectRatio;
 diff --git a/CoreGraphics/include/CoreGraphics/CGFont.h b/CoreGraphics/include/CoreGraphics/CGFont.h
-index 50a92d54..cb0add22 100644
+index 50a92d5..cb0add2 100644
 --- a/CoreGraphics/include/CoreGraphics/CGFont.h
 +++ b/CoreGraphics/include/CoreGraphics/CGFont.h
 @@ -36,6 +36,7 @@ COREGRAPHICS_EXPORT CGFontRef CGFontRetain(CGFontRef self);
@@ -7640,7 +8003,7 @@ index 50a92d54..cb0add22 100644
  COREGRAPHICS_EXPORT int CGFontGetAscent(CGFontRef self);
  COREGRAPHICS_EXPORT int CGFontGetDescent(CGFontRef self);
 diff --git a/CoreGraphics/include/CoreGraphics/CGSConnection.h b/CoreGraphics/include/CoreGraphics/CGSConnection.h
-index f3991816..7862bdbb 100644
+index f399181..7862bdb 100644
 --- a/CoreGraphics/include/CoreGraphics/CGSConnection.h
 +++ b/CoreGraphics/include/CoreGraphics/CGSConnection.h
 @@ -38,6 +38,10 @@
@@ -7654,8 +8017,22 @@ index f3991816..7862bdbb 100644
  // Mouse location in CG coordinates, i.e. relative to the upper left corner
  -(CGPoint) mouseLocation;
  
+diff --git a/CoreGraphics/include/CoreGraphics/CGSubWindow.h b/CoreGraphics/include/CoreGraphics/CGSubWindow.h
+index de7a349..79ee0d3 100644
+--- a/CoreGraphics/include/CoreGraphics/CGSubWindow.h
++++ b/CoreGraphics/include/CoreGraphics/CGSubWindow.h
+@@ -6,6 +6,9 @@
+ @interface CGSubWindow : NSObject
+ 
+ - (void *) nativeWindow;
++// Borrowed surface; the subwindow/backend retains ownership.
++- (void *) sharedCGLWindow;
++- (void) setAllowsParentDrawable: (BOOL) allowed;
+ 
+ - (void) show;
+ - (void) hide;
 diff --git a/CoreGraphics/include/CoreGraphics/CGWindow.h b/CoreGraphics/include/CoreGraphics/CGWindow.h
-index e1112f40..3a4fa2d6 100644
+index e1112f4..3a4fa2d 100644
 --- a/CoreGraphics/include/CoreGraphics/CGWindow.h
 +++ b/CoreGraphics/include/CoreGraphics/CGWindow.h
 @@ -30,6 +30,7 @@ extern const CFStringRef kCGWindowAlpha;
@@ -7675,7 +8052,7 @@ index e1112f40..3a4fa2d6 100644
  COREGRAPHICS_EXPORT CGImageRef CGWindowListCreateImageFromArray(CGRect screenBounds, CFArrayRef  windowArray, CGWindowImageOption imageOption);
  
 diff --git a/CoreText/CMakeLists.txt b/CoreText/CMakeLists.txt
-index 1ec11620..af21f5b3 100644
+index 1ec1162..af21f5b 100644
 --- a/CoreText/CMakeLists.txt
 +++ b/CoreText/CMakeLists.txt
 @@ -28,7 +28,6 @@ set(CoreText_sources
@@ -7693,7 +8070,7 @@ index 1ec11620..af21f5b3 100644
 +		fontconfig
  )
 diff --git a/CoreText/CTFont.m b/CoreText/CTFont.m
-index 94ddabf9..fa018d3d 100644
+index 94ddabf..00c4a7c 100644
 --- a/CoreText/CTFont.m
 +++ b/CoreText/CTFont.m
 @@ -20,6 +20,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -8333,7 +8710,7 @@ index 94ddabf9..fa018d3d 100644
  
  CFTypeID CTFontGetTypeID(void)
 diff --git a/CoreText/CTFontDescriptor.m b/CoreText/CTFontDescriptor.m
-index 8866ce59..62dcf226 100644
+index 8866ce5..62dcf22 100644
 --- a/CoreText/CTFontDescriptor.m
 +++ b/CoreText/CTFontDescriptor.m
 @@ -1,6 +1,7 @@
@@ -8452,7 +8829,7 @@ index 8866ce59..62dcf226 100644
 +    return CTFontDescriptorCopyAttribute(descriptor, attribute);
  }
 diff --git a/CoreText/CTFontManager.m b/CoreText/CTFontManager.m
-index 943e1b78..049665fb 100644
+index 943e1b7..049665f 100644
 --- a/CoreText/CTFontManager.m
 +++ b/CoreText/CTFontManager.m
 @@ -1,23 +1,43 @@
@@ -8625,7 +9002,7 @@ index 943e1b78..049665fb 100644
 +    return desc;
 +}
 diff --git a/CoreText/KTFont.m b/CoreText/KTFont.m
-index bcf32460..00f64ed8 100644
+index bcf3246..00f64ed 100644
 --- a/CoreText/KTFont.m
 +++ b/CoreText/KTFont.m
 @@ -46,6 +46,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -8706,7 +9083,7 @@ index bcf32460..00f64ed8 100644
  
  @end
 diff --git a/CoreText/KTFont_FT.m b/CoreText/KTFont_FT.m
-index 33dc18c6..78887dd8 100644
+index 33dc18c..78887dd 100644
 --- a/CoreText/KTFont_FT.m
 +++ b/CoreText/KTFont_FT.m
 @@ -60,11 +60,13 @@
@@ -8782,7 +9159,7 @@ index 33dc18c6..78887dd8 100644
  
  @end
 diff --git a/CoreText/include/CoreText/CTFontDescriptor.h b/CoreText/include/CoreText/CTFontDescriptor.h
-index b2688960..fee68509 100644
+index b268896..fee6850 100644
 --- a/CoreText/include/CoreText/CTFontDescriptor.h
 +++ b/CoreText/include/CoreText/CTFontDescriptor.h
 @@ -1,4 +1,4 @@
@@ -8823,7 +9200,7 @@ index b2688960..fee68509 100644
  
  CF_IMPLICIT_BRIDGING_DISABLED
 diff --git a/CoreText/include/CoreText/KTFont.h b/CoreText/include/CoreText/KTFont.h
-index 46a5bab0..e2170bc5 100644
+index 46a5bab..e2170bc 100644
 --- a/CoreText/include/CoreText/KTFont.h
 +++ b/CoreText/include/CoreText/KTFont.h
 @@ -35,6 +35,7 @@ enum { CGNullGlyph = 0x0 };
@@ -8836,7 +9213,7 @@ index 46a5bab0..e2170bc5 100644
  
 diff --git a/CoreText/stubs.c b/CoreText/stubs.c
 deleted file mode 100644
-index 1287daa5..00000000
+index 1287daa..0000000
 --- a/CoreText/stubs.c
 +++ /dev/null
 @@ -1,6 +0,0 @@
@@ -8847,7 +9224,7 @@ index 1287daa5..00000000
 -    return NULL;
 -}
 diff --git a/Onyx2D/O2Context_builtin_FT.m b/Onyx2D/O2Context_builtin_FT.m
-index a8bf3fa6..59f3c45b 100644
+index a8bf3fa..59f3c45 100644
 --- a/Onyx2D/O2Context_builtin_FT.m
 +++ b/Onyx2D/O2Context_builtin_FT.m
 @@ -92,6 +92,12 @@ static void renderFreeTypeBitmap(O2Context_builtin_FT *self, O2Surface *surface,
@@ -8972,7 +9349,7 @@ index a8bf3fa6..59f3c45b 100644
  }
  
 diff --git a/Onyx2D/O2DataProvider.m b/Onyx2D/O2DataProvider.m
-index 8e80cddb..386fee81 100644
+index 8e80cdd..386fee8 100644
 --- a/Onyx2D/O2DataProvider.m
 +++ b/Onyx2D/O2DataProvider.m
 @@ -97,6 +97,10 @@ void O2DataProviderRelease(O2DataProviderRef self) {
@@ -8987,7 +9364,7 @@ index 8e80cddb..386fee81 100644
          return (CFDataRef)[self->_data copy];
      else
 diff --git a/Onyx2D/O2Font.m b/Onyx2D/O2Font.m
-index 1f72ccef..8891602a 100644
+index 1f72cce..8891602 100644
 --- a/Onyx2D/O2Font.m
 +++ b/Onyx2D/O2Font.m
 @@ -21,8 +21,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
@@ -9017,7 +9394,7 @@ index 1f72ccef..8891602a 100644
      if (self == [O2Font class]) {
          // Set some decent defaut substitution fonts
 diff --git a/Onyx2D/O2Font_freetype.m b/Onyx2D/O2Font_freetype.m
-index e21cd7d5..1c7c737d 100644
+index e21cd7d..1c7c737 100644
 --- a/Onyx2D/O2Font_freetype.m
 +++ b/Onyx2D/O2Font_freetype.m
 @@ -4,6 +4,55 @@
@@ -9093,7 +9470,7 @@ index e21cd7d5..1c7c737d 100644
  
  - (O2Glyph) glyphWithGlyphName: (NSString *) name {
 diff --git a/Onyx2D/O2Surface.m b/Onyx2D/O2Surface.m
-index e96a03a3..d1f0e087 100644
+index e96a03a..d1f0e08 100644
 --- a/Onyx2D/O2Surface.m
 +++ b/Onyx2D/O2Surface.m
 @@ -294,6 +294,18 @@ static void O2SurfaceWrite_argb8u_to_BGRA8888(O2Surface *self, int x, int y,
@@ -9146,7 +9523,7 @@ index e96a03a3..d1f0e087 100644
                  }
              } else if ([colorSpace type] == kO2ColorSpaceModelCMYK) {
 diff --git a/Onyx2D/include/Onyx2D/O2Font.h b/Onyx2D/include/Onyx2D/O2Font.h
-index c2e06958..197aa09c 100644
+index c2e0695..197aa09 100644
 --- a/Onyx2D/include/Onyx2D/O2Font.h
 +++ b/Onyx2D/include/Onyx2D/O2Font.h
 @@ -81,7 +81,11 @@ typedef enum {
@@ -9162,7 +9539,7 @@ index c2e06958..197aa09c 100644
  - (O2Glyph) glyphWithGlyphName: (NSString *) name;
  - (NSString *) copyGlyphNameForGlyph: (O2Glyph) glyph;
 diff --git a/Onyx2D/include/Onyx2D/O2Font_freetype.h b/Onyx2D/include/Onyx2D/O2Font_freetype.h
-index 039d8c94..b518c961 100644
+index 039d8c9..b518c96 100644
 --- a/Onyx2D/include/Onyx2D/O2Font_freetype.h
 +++ b/Onyx2D/include/Onyx2D/O2Font_freetype.h
 @@ -10,6 +10,7 @@
@@ -9174,7 +9551,7 @@ index 039d8c94..b518c961 100644
  #import <fontconfig/fontconfig.h>
  
 diff --git a/QuartzCore/CALayer.m b/QuartzCore/CALayer.m
-index 5dcac115..5de4f03f 100644
+index 5dcac11..5de4f03 100644
 --- a/QuartzCore/CALayer.m
 +++ b/QuartzCore/CALayer.m
 @@ -1,8 +1,243 @@
@@ -9745,6 +10122,7 @@ index 5dcac115..5de4f03f 100644
 +
  @end
 diff --git a/QuartzCore/CALayerContext.m b/QuartzCore/CALayerContext.m
+index 5dce8c5..103331a 100644
 --- a/QuartzCore/CALayerContext.m
 +++ b/QuartzCore/CALayerContext.m
 @@ -1,47 +1,89 @@
@@ -9827,11 +10205,10 @@ diff --git a/QuartzCore/CALayerContext.m b/QuartzCore/CALayerContext.m
 -        kCGLNoError)
 -        NSLog(@"CGLCreateContext failed with %d in %s %d", error, __FILE__,
 -              __LINE__);
--
 +    self = [super init];
 +    if (self == nil)
 +        return nil;
-+
+ 
 +    _deleteTextureIds = [[NSMutableArray alloc] init];
      _frame = rect;
 -
@@ -9990,17 +10367,15 @@ diff --git a/QuartzCore/CALayerContext.m b/QuartzCore/CALayerContext.m
 +    CFTimeInterval assignStart = CACurrentMediaTime();
 +    darlingQCTiming("renderLayerSetup", assignStart - renderLayerStart);
      [self assignTextureIdsToLayerTree: layer];
--
++    darlingQCTiming("assignTextureIds", CACurrentMediaTime() - assignStart);
+ 
 -    // this is where the Metal layer renders to an internal texture for us to use
 -    if ([[layer class] isSubclassOfClass: [CAMetalLayerInternal class]]) {
 -        CAMetalLayerInternal* mtl = (CAMetalLayerInternal*)layer;
 -        [mtl prepareRender];
 -    }
--
-+    darlingQCTiming("assignTextureIds", CACurrentMediaTime() - assignStart);
-+
 +    [self prepareMetalLayers: layer];
-+
+ 
 +    CFTimeInterval rendererStart = CACurrentMediaTime();
      [_renderer render];
 +    darlingQCTiming("rendererRender", CACurrentMediaTime() - rendererStart);
@@ -10086,7 +10461,7 @@ diff --git a/QuartzCore/CALayerContext.m b/QuartzCore/CALayerContext.m
  
  @end
 diff --git a/QuartzCore/CALayerInternal.h b/QuartzCore/CALayerInternal.h
-index 5ad375f8..c8e83814 100644
+index 5ad375f..c8e8381 100644
 --- a/QuartzCore/CALayerInternal.h
 +++ b/QuartzCore/CALayerInternal.h
 @@ -23,4 +23,5 @@
@@ -10096,7 +10471,7 @@ index 5ad375f8..c8e83814 100644
 +- (BOOL) _treeHasAnimations;
  @end
 diff --git a/QuartzCore/CAMetalDrawable.mm b/QuartzCore/CAMetalDrawable.mm
-index d6f86b31..687f05d5 100644
+index d6f86b3..687f05d 100644
 --- a/QuartzCore/CAMetalDrawable.mm
 +++ b/QuartzCore/CAMetalDrawable.mm
 @@ -31,6 +31,13 @@
@@ -10553,7 +10928,7 @@ index d6f86b31..687f05d5 100644
  
  static void glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* context) {
 diff --git a/QuartzCore/CAMetalLayer.mm b/QuartzCore/CAMetalLayer.mm
-index b81e2e14..63533444 100644
+index b81e2e1..6353344 100644
 --- a/QuartzCore/CAMetalLayer.mm
 +++ b/QuartzCore/CAMetalLayer.mm
 @@ -25,7 +25,79 @@
@@ -10897,7 +11272,7 @@ index b81e2e14..63533444 100644
  
  #else
 diff --git a/QuartzCore/CARenderer.m b/QuartzCore/CARenderer.m
-index dd0a1270..b6916db3 100644
+index dd0a127..b6916db 100644
 --- a/QuartzCore/CARenderer.m
 +++ b/QuartzCore/CARenderer.m
 @@ -1,10 +1,12 @@
@@ -11047,7 +11422,7 @@ index dd0a1270..b6916db3 100644
          GLint minFilter = interpolationFromName(layer.minificationFilter);
          GLint magFilter = interpolationFromName(layer.magnificationFilter);
 diff --git a/QuartzCore/CATransaction.m b/QuartzCore/CATransaction.m
-index 5f7998b9..b8968893 100644
+index 5f7998b..b896889 100644
 --- a/QuartzCore/CATransaction.m
 +++ b/QuartzCore/CATransaction.m
 @@ -4,6 +4,10 @@
@@ -11199,7 +11574,7 @@ index 5f7998b9..b8968893 100644
  
  + (void) lock {
 diff --git a/QuartzCore/CATransactionGroup.m b/QuartzCore/CATransactionGroup.m
-index 5a060cc3..572ddf65 100644
+index 5a060cc..572ddf6 100644
 --- a/QuartzCore/CATransactionGroup.m
 +++ b/QuartzCore/CATransactionGroup.m
 @@ -21,7 +21,13 @@
@@ -11218,7 +11593,7 @@ index 5a060cc3..572ddf65 100644
  
  @end
 diff --git a/QuartzCore/CATransformLayer.m b/QuartzCore/CATransformLayer.m
-index 444122cc..81b01703 100644
+index 444122c..81b0170 100644
 --- a/QuartzCore/CATransformLayer.m
 +++ b/QuartzCore/CATransformLayer.m
 @@ -1,18 +1,42 @@
@@ -11279,7 +11654,7 @@ index 444122cc..81b01703 100644
 +@implementation CATransformLayer
  @end
 diff --git a/QuartzCore/CMakeLists.txt b/QuartzCore/CMakeLists.txt
-index bc12fb7f..3ab43fd7 100644
+index bc12fb7..3ab43fd 100644
 --- a/QuartzCore/CMakeLists.txt
 +++ b/QuartzCore/CMakeLists.txt
 @@ -100,6 +100,7 @@ add_framework(QuartzCore
@@ -11300,7 +11675,7 @@ index bc12fb7f..3ab43fd7 100644
  target_include_directories(QuartzCore PUBLIC
  	include
 diff --git a/QuartzCore/include/QuartzCore/CALayer.h b/QuartzCore/include/QuartzCore/CALayer.h
-index 49b03483..5ebbf535 100644
+index 49b0348..5ebbf53 100644
 --- a/QuartzCore/include/QuartzCore/CALayer.h
 +++ b/QuartzCore/include/QuartzCore/CALayer.h
 @@ -70,6 +70,7 @@ CA_EXPORT NSString *const kCAContentsFormatGray8Uint;
@@ -11407,7 +11782,7 @@ index 49b03483..5ebbf535 100644
  - (void) display;
  - (void) displayIfNeeded;
 diff --git a/QuartzCore/include/QuartzCore/CALayerContext.h b/QuartzCore/include/QuartzCore/CALayerContext.h
-index e4b0c342..69b39250 100644
+index e4b0c34..69b3925 100644
 --- a/QuartzCore/include/QuartzCore/CALayerContext.h
 +++ b/QuartzCore/include/QuartzCore/CALayerContext.h
 @@ -17,9 +17,11 @@
@@ -11423,7 +11798,7 @@ index e4b0c342..69b39250 100644
  - initWithFrame: (CGRect) rect;
  
 diff --git a/QuartzCore/include/QuartzCore/CATransaction.h b/QuartzCore/include/QuartzCore/CATransaction.h
-index 985f77f3..db64f55d 100644
+index 985f77f..db64f55 100644
 --- a/QuartzCore/include/QuartzCore/CATransaction.h
 +++ b/QuartzCore/include/QuartzCore/CATransaction.h
 @@ -10,6 +10,23 @@ CA_EXPORT NSString *const kCATransactionCompletionBlock;
@@ -11452,7 +11827,7 @@ index 985f77f3..db64f55d 100644
  + (CAMediaTimingFunction *) animationTimingFunction;
 diff --git a/QuartzCore/include/QuartzCore/CATransformLayer.h b/QuartzCore/include/QuartzCore/CATransformLayer.h
 new file mode 100644
-index 00000000..19cd9ea9
+index 0000000..19cd9ea
 --- /dev/null
 +++ b/QuartzCore/include/QuartzCore/CATransformLayer.h
 @@ -0,0 +1,28 @@
@@ -11484,329 +11859,3 @@ index 00000000..19cd9ea9
 +- (instancetype) init;
 +
 +@end
-diff --git a/AppKit/NSSavePanel.subproj/NSSavePanel.m b/AppKit/NSSavePanel.subproj/NSSavePanel.m
-index 50c3d59e..be5a8463 100644
---- a/AppKit/NSSavePanel.subproj/NSSavePanel.m
-+++ b/AppKit/NSSavePanel.subproj/NSSavePanel.m
-@@ -113,19 +113,116 @@
-     }
- }
- 
-+/* Paths of the rows selected in the file list. Safe with no selection. */
-+- (NSArray *) _selectedPaths {
-+    NSMutableArray *paths = [NSMutableArray array];
-+    NSIndexSet *rows = [_outlineView selectedRowIndexes];
-+    for (NSUInteger row = [rows firstIndex]; row != NSNotFound;
-+         row = [rows indexGreaterThanIndex: row]) {
-+        id item = [_outlineView itemAtRow: row];
-+        if ([item isKindOfClass: [NSURL class]] && [[item path] length] > 0)
-+            [paths addObject: [item path]];
-+    }
-+    return paths;
-+}
-+
-+/* What the Open/Save button accepts: the selected rows, or with nothing
-+ * selected the directory being shown. An empty result keeps the panel up. */
-+- (NSArray *) _acceptablePaths {
-+    NSArray *selected = [self _selectedPaths];
-+    if ([selected count] > 0)
-+        return selected;
-+    if ([_directory length] > 0)
-+        return @[ _directory ];
-+    return @[];
-+}
-+
-+- (void) _setAcceptedPaths: (NSArray *) paths {
-+    [self _setFilename: [paths firstObject]];
-+}
-+
-+/* End the modal session this panel is running and take the panel off screen.
-+ * The session is stopped only when this panel is the modal window, never
-+ * another session that happens to be on top. The panel is hidden here as well
-+ * so a dialog whose session cannot be stopped still goes away. */
-+- (void) _dismissWithCode: (NSModalResponse) code {
-+    if ([NSApp modalWindow] == self)
-+        [NSApp stopModalWithCode: code];
-+    [self orderOut: nil];
-+}
-+
- - (IBAction) _selectFile: (id) sender {
--    NSURL *url = [_outlineView itemAtRow: [_outlineView selectedRow]];
--    [self _setFilename: [url path]];
--
--    [NSApp stopModalWithCode: NSOKButton];
-+    NSArray *paths = [self _acceptablePaths];
-+    if ([paths count] == 0)
-+        return;
-+    @try {
-+        [self _setAcceptedPaths: paths];
-+    } @catch (NSException *exception) {
-+        NSLog(@"NSSavePanel: could not record the chosen file: %@", exception);
-+        [self _dismissWithCode: NSCancelButton];
-+        return;
-+    }
-+    [self _dismissWithCode: NSOKButton];
- }
- 
- - (IBAction) _cancel: (id) sender {
--    [NSApp stopModalWithCode: NSCancelButton];
--}
--
-+    [self _dismissWithCode: NSCancelButton];
-+}
-+
-+- (void) cancelOperation: (id) sender {
-+    [self _cancel: sender];
-+}
-+
-+// Electron (Riot Client UI) opens its file dialogs through these and waits
-+// for the handler; run the panel modally and report the result.
- - (void) beginWithCompletionHandler: (void (^)(NSModalResponse result)) handler {
--    NSUnimplementedMethod();
-+    NSModalResponse result = [self runModal];
-+    if (handler)
-+        handler(result);
-+}
-+
-+- (void) beginSheetModalForWindow: (NSWindow *) window
-+                completionHandler: (void (^)(NSModalResponse result)) handler
-+{
-+    [self beginWithCompletionHandler: handler];
-+}
-+
-+// Electron sets these unconditionally; Cocotron's panel has no tag field,
-+// name label or extension toggle, so they are accepted and ignored.
-+- (void) setNameFieldLabel: (NSString *) label {
-+}
-+
-+- (NSString *) nameFieldLabel {
-+    return nil;
-+}
-+
-+- (void) setShowsTagField: (BOOL) flag {
-+}
-+
-+- (BOOL) showsTagField {
-+    return NO;
-+}
-+
-+- (void) setTagNames: (NSArray *) names {
-+    (void)names;
-+}
-+
-+- (NSArray *) tagNames {
-+    return [NSArray array];
-+}
-+
-+- (void) setExtensionHidden: (BOOL) flag {
-+}
-+
-+- (BOOL) isExtensionHidden {
-+    return NO;
-+}
-+
-+- (void) setCanSelectHiddenExtension: (BOOL) flag {
-+}
-+
-+- (BOOL) canSelectHiddenExtension {
-+    return NO;
- }
- 
- - (NSInteger) runModalForDirectory: (NSString *) directory
-diff --git a/AppKit/NSSavePanel.subproj/NSOpenPanel.m b/AppKit/NSSavePanel.subproj/NSOpenPanel.m
-index dfd33637..9388b186 100644
---- a/AppKit/NSSavePanel.subproj/NSOpenPanel.m
-+++ b/AppKit/NSSavePanel.subproj/NSOpenPanel.m
-@@ -23,6 +23,8 @@
- 
- @interface NSSavePanel (Private)
- - (void) _setFilename: (NSString *) filename;
-+- (NSArray *) _selectedPaths;
-+- (void) _setAcceptedPaths: (NSArray *) paths;
- @end
- 
- @implementation NSOpenPanel
-@@ -92,7 +94,36 @@
- 
- - (void) _setFilename: (NSString *) filename {
-     [super _setFilename: filename];
--    _filenames = [@[ filename ] retain];
-+    [self _setAcceptedPaths: [filename length] > 0 ? @[ filename ] : @[]];
-+}
-+
-+- (void) _setAcceptedPaths: (NSArray *) paths {
-+    if (!_allowsMultipleSelection && [paths count] > 1)
-+        paths = @[ [paths firstObject] ];
-+    @synchronized(self) {
-+        NSArray *copy = [paths copy];
-+        [_filenames release];
-+        _filenames = copy;
-+    }
-+    [super _setFilename: [paths firstObject]];
-+}
-+
-+/* Open only accepts what the panel was configured to choose. With nothing
-+ * selected, a directory chooser accepts the directory being shown. */
-+- (NSArray *) _acceptablePaths {
-+    NSFileManager *manager = [NSFileManager defaultManager];
-+    NSMutableArray *result = [NSMutableArray array];
-+    for (NSString *path in [self _selectedPaths]) {
-+        BOOL isDirectory = NO;
-+        if (![manager fileExistsAtPath: path isDirectory: &isDirectory])
-+            continue;
-+        if (isDirectory ? _canChooseDirectories : _canChooseFiles)
-+            [result addObject: path];
-+    }
-+    if ([result count] == 0 && [[self _selectedPaths] count] == 0 &&
-+        _canChooseDirectories && [[self directory] length] > 0)
-+        [result addObject: [self directory]];
-+    return result;
- }
- 
- - (NSInteger) runModalForDirectory: (NSString *) directory
-diff --git a/AppKit/include/AppKit/NSSavePanel.h b/AppKit/include/AppKit/NSSavePanel.h
-index 53bacc46..3c6adfb7 100644
---- a/AppKit/include/AppKit/NSSavePanel.h
-+++ b/AppKit/include/AppKit/NSSavePanel.h
-@@ -88,6 +88,20 @@ enum {
- - (void) setPrompt: (NSString *) message;
- - (NSString *) prompt;
- 
-+- (void) setNameFieldLabel: (NSString *) label;
-+- (NSString *) nameFieldLabel;
-+- (void) setShowsTagField: (BOOL) flag;
-+- (BOOL) showsTagField;
-+- (void) setTagNames: (NSArray *) names;
-+- (NSArray *) tagNames;
-+- (void) setExtensionHidden: (BOOL) flag;
-+- (BOOL) isExtensionHidden;
-+- (void) setCanSelectHiddenExtension: (BOOL) flag;
-+- (BOOL) canSelectHiddenExtension;
-+
-+- (void) beginSheetModalForWindow: (NSWindow *) window
-+                completionHandler: (void (^)(NSModalResponse result)) handler;
-+
- - (void) beginSheetForDirectory: (NSString *) path
-                            file: (NSString *) name
-                  modalForWindow: (NSWindow *) docWindow
-diff --git a/CoreGraphics/CGSubWindow.m b/CoreGraphics/CGSubWindow.m
-index 008ccd74..6692deb5 100644
---- a/CoreGraphics/CGSubWindow.m
-+++ b/CoreGraphics/CGSubWindow.m
-@@ -8,6 +8,10 @@
-     return NULL;
- }
- 
-+// Backends may lend an existing EGL surface for full-window layer rendering.
-+- (void *) sharedCGLWindow { return NULL; }
-+- (void) setAllowsParentDrawable: (BOOL) allowed {}
-+
- - (void) show {
-     O2InvalidAbstractInvocation();
- }
-diff --git a/CoreGraphics/include/CoreGraphics/CGSubWindow.h b/CoreGraphics/include/CoreGraphics/CGSubWindow.h
-index de7a3496..79ee0d31 100644
---- a/CoreGraphics/include/CoreGraphics/CGSubWindow.h
-+++ b/CoreGraphics/include/CoreGraphics/CGSubWindow.h
-@@ -6,6 +6,9 @@
- @interface CGSubWindow : NSObject
- 
- - (void *) nativeWindow;
-+// Borrowed surface; the subwindow/backend retains ownership.
-+- (void *) sharedCGLWindow;
-+- (void) setAllowsParentDrawable: (BOOL) allowed;
- 
- - (void) show;
- - (void) hide;
-diff --git a/AppKit/X11.backend/X11SubWindow.m b/AppKit/X11.backend/X11SubWindow.m
-index 738ab457..6596dab5 100644
---- a/AppKit/X11.backend/X11SubWindow.m
-+++ b/AppKit/X11.backend/X11SubWindow.m
-@@ -1,6 +1,7 @@
- #import "X11SubWindow.h"
- #import "X11Display.h"
- #import "X11Window.h"
-+#import <AppKit/NSWindow.h>
- 
- @implementation X11SubWindow
- 
-@@ -15,8 +16,9 @@
- }
- 
- - (id) initWithParentWindow: (X11Window *) parent frame: (CGRect) frame {
--    _parent = parent;
-+    _parent = [parent retain];
-     frame = [self convertFrame: frame];
-+    _drawableFrame = frame;
- 
-     _display = [(X11Display *) [NSDisplay currentDisplay] display];
- 
-@@ -31,7 +33,9 @@
- }
- 
- - (void) dealloc {
-+    if (_usingParentDrawable) [_parent releaseLayerDrawable: self];
-     XDestroyWindow(_display, _window);
-+    [_parent release];
-     [super dealloc];
- }
- 
-@@ -39,16 +43,41 @@
-     return (void *) _window;
- }
- 
-+- (void) setAllowsParentDrawable: (BOOL) allowed {
-+    _allowsParentDrawable = allowed;
-+}
-+
-+- (void *) sharedCGLWindow {
-+    // Only a full-window borderless game view may draw into the managed parent.
-+    // Other views keep independent child drawables and their own coordinates.
-+    CGRect parentFrame = [_parent frame];
-+    BOOL coversParent = _allowsParentDrawable && _visible && !([_parent styleMask] & NSTitledWindowMask) &&
-+        CGRectEqualToRect(_drawableFrame, CGRectMake(0, 0, parentFrame.size.width, parentFrame.size.height));
-+    void *surface = coversParent ? [_parent layerDrawableFor: self] : NULL;
-+    BOOL usingParent = surface != NULL;
-+    if (usingParent != _usingParentDrawable) {
-+        if (usingParent) [_parent acquireLayerDrawable: self];
-+        else [_parent releaseLayerDrawable: self];
-+        _usingParentDrawable = usingParent;
-+    }
-+    if (_visible && !usingParent) XMapWindow(_display, _window);
-+    else XUnmapWindow(_display, _window);
-+    return surface;
-+}
-+
- - (void) show {
--    XMapWindow(_display, _window);
-+    _visible = YES;
-+    [self sharedCGLWindow];
- }
- 
- - (void) hide {
--    XUnmapWindow(_display, _window);
-+    _visible = NO;
-+    [self sharedCGLWindow];
- }
- 
- - (void) setFrame: (CGRect) frame {
-     frame = [self convertFrame: frame];
-+    _drawableFrame = frame;
- 
-     XMoveResizeWindow(_display, _window, frame.origin.x, frame.origin.y,
-                       frame.size.width, frame.size.height);
-diff --git a/AppKit/X11.backend/X11SubWindow.h b/AppKit/X11.backend/X11SubWindow.h
-index 65b63a3e..e5b913b1 100644
---- a/AppKit/X11.backend/X11SubWindow.h
-+++ b/AppKit/X11.backend/X11SubWindow.h
-@@ -7,6 +7,10 @@
-     X11Window *_parent;
-     Display *_display;
-     Window _window;
-+    CGRect _drawableFrame;
-+    BOOL _visible;
-+    BOOL _allowsParentDrawable;
-+    BOOL _usingParentDrawable;
- }
- 
- - initWithParentWindow: (X11Window *) parent frame: (CGRect) frame;
