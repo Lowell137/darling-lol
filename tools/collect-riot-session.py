@@ -20,6 +20,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -154,6 +155,25 @@ def main():
           'close the client to finish', flush=True)
     env['RCLOL_COLLECTED'] = '1'
     process = subprocess.Popen([str(ROOT / 'scripts' / 'run.sh')], env=env)
+
+    def finish(signum, frame):
+        # The launcher is often closed with SIGTERM (timeout, session logout): stop the
+        # client, then collect like a normal close instead of dropping the session.
+        # run.sh may hand the launch to another process, so the direct terminate can be
+        # refused; fall back to the client processes and the runtime stop script.
+        try:
+            process.terminate()
+            process.wait(timeout=8)
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+        subprocess.run(['pkill', '-f', 'RiotClientServices|LeagueClient'], check=False)
+        subprocess.run([sys.executable, str(ROOT / 'build/runtime/tools/stop-darling-runtime.py')],
+                       check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        time.sleep(2)
+        collect(start)
+        sys.exit(0)
+
+    signal.signal(signal.SIGTERM, finish)
     try:
         process.wait()
     except KeyboardInterrupt:
