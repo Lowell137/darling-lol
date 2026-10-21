@@ -152,6 +152,7 @@ def main():
     env.setdefault('RCLOL_CLOSE_CLIENT_IN_GAME', '1')
     print(f'collecting into ~/darling-sessions ({dt.datetime.fromtimestamp(start):%H:%M:%S}); '
           'close the client to finish', flush=True)
+    env['RCLOL_COLLECTED'] = '1'
     process = subprocess.Popen([str(ROOT / 'scripts' / 'run.sh')], env=env)
     try:
         process.wait()

@@ -2,6 +2,12 @@
 set -eu
 repo=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$repo"
+
+# darling-lol: keep a session transcript unless told otherwise. The collector re-enters this
+# script with RCLOL_COLLECTED=1, so the guard below is what stops the recursion.
+if [ -z "${RCLOL_COLLECTED:-}" ] && [ -z "${RCLOL_NO_COLLECT:-}" ] && [ -x "$repo/tools/collect-riot-session.py" ]; then
+  RCLOL_COLLECTED=1 exec "$repo/tools/collect-riot-session.py"
+fi
 if [ -n "${DARLING_WORKSPACE:-}" ] && ! python3 scripts/nix-state.py check; then
   echo 'Rootless runtime readiness is missing or incompatible; run darling-lol --installer in a terminal.' >&2
   exit 1
