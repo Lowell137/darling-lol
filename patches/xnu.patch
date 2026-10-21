@@ -5108,6 +5108,119 @@ index 1098510..1741d5a 100644
 +	    buf->f_mntfromname, sizeof(buf->f_mntfromname));
  	return 0;
  }
+diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c
+index d1cdd3d..2672f19 100644
+--- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c
++++ b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/getfsstat.c
+@@ -14,6 +14,43 @@
+ extern char *strtok_r(char *str, const char *delim, char **saveptr);
+ extern unsigned long strlcpy(char* dst, const char* src, unsigned long size);
+ 
++
++/* darling-lol: the guest must not see the Linux mount table. A real Mac
++ * reports a handful of APFS volumes; /proc/self/mounts gives dozens of
++ * host filesystems (btrfs, overlay, tmpfs, cgroup, /proc, /sys). Filter
++ * them out and report the root as an APFS volume. */
++static int hidden_fs(const char* source, const char* mount, const char* type)
++{
++	static const char* const types[] = {
++		"btrfs", "ext2", "ext3", "ext4", "xfs", "f2fs", "zfs", "overlay",
++		"tmpfs", "ramfs", "proc", "sysfs", "devtmpfs", "devpts", "cgroup",
++		"cgroup2", "mqueue", "nsfs", "bpf", "tracefs", "debugfs",
++		"securityfs", "pstore", "configfs", "hugetlbfs", "fusectl",
++		"binfmt_misc", "efivarfs", "autofs", "rpc_pipefs", "sunrpc",
++		"fuse", "fuse.portal", "nfsd", "9p", 0
++	};
++	static const char* const paths[] = {
++		"/proc", "/sys", "/dev/pts", "/dev/shm", "/dev/mqueue", "/run",
++		"/Volumes/SystemRoot", 0
++	};
++	for (int i = 0; types[i]; i++) {
++		const char* a = types[i]; const char* b = type;
++		while (*a && *a == *b) { a++; b++; }
++		if (!*a && !*b) return 1;
++	}
++	for (int i = 0; paths[i]; i++) {
++		const char* a = paths[i]; const char* b = mount;
++		while (*a && *a == *b) { a++; b++; }
++		if (!*a) return 1;
++	}
++	return 0;
++}
++
++static int root_mount(const char* mount)
++{
++	return mount[0] == '/' && mount[1] == '\0';
++}
++
+ long sys_getfsstat(struct bsd_statfs* buf, int bufsize, int flags)
+ {
+ #ifdef __x86_64__
+@@ -43,28 +80,41 @@ long sys_getfsstat64(struct bsd_statfs64* buf, int bufsize, int flags)
+ 		char* saveptr;
+ 		struct linux_statfs64 lbuf;
+ 
+-		if (buf != NULL)
+ 		{
+-			if (bufsize < sizeof(struct bsd_statfs64) * (count+1))
+-				break;
++			char* source;
++			char* mount;
++			char* type;
++			int skip;
+ 
+-			p = strtok_r(line, " ", &saveptr);
+-			if (p == NULL)
++			source = strtok_r(line, " ", &saveptr);
++			if (source == NULL)
+ 				continue;
+-
+-			strlcpy(buf[count].f_mntfromname, p, sizeof(buf[count].f_mntfromname));
+-
+-			p = strtok_r(NULL, " ", &saveptr);
+-			if (p == NULL)
++			mount = strtok_r(NULL, " ", &saveptr);
++			if (mount == NULL)
++				continue;
++			type = strtok_r(NULL, " ", &saveptr);
++			if (type == NULL)
+ 				continue;
+ 
+-			strlcpy(buf[count].f_mntonname, p, sizeof(buf[count].f_mntonname));
+-
+-			p = strtok_r(NULL, " ", &saveptr);
+-			if (p == NULL)
++			skip = hidden_fs(source, mount, type);
++			if (buf != NULL)
++			{
++				if (bufsize < sizeof(struct bsd_statfs64) * (count+1))
++					break;
++			}
++			if (skip)
+ 				continue;
+ 
+-			strlcpy(buf[count].f_fstypename, p, sizeof(buf[count].f_fstypename));
++			if (buf != NULL)
++			{
++				if (root_mount(mount)) {
++					strlcpy(buf[count].f_mntfromname, "/dev/disk3s1s1", sizeof(buf[count].f_mntfromname));
++					strlcpy(buf[count].f_fstypename, "apfs", sizeof(buf[count].f_fstypename));
++				} else {
++					strlcpy(buf[count].f_mntfromname, source, sizeof(buf[count].f_mntfromname));
++					strlcpy(buf[count].f_fstypename, type, sizeof(buf[count].f_fstypename));
++				}
++				strlcpy(buf[count].f_mntonname, mount, sizeof(buf[count].f_mntonname));
+ 
+ #ifdef __NR_statfs64
+ 			if (LINUX_SYSCALL2(__NR_statfs64, (char*)buf[count].f_mntonname, &lbuf) < 0)
+@@ -74,6 +124,7 @@ long sys_getfsstat64(struct bsd_statfs64* buf, int bufsize, int flags)
+ 				continue;
+ 
+ 			statfs_linux_to_bsd64(&lbuf, &buf[count]);
++			}
+ 		}
+ 
+ 		count++;
 diff --git a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/statfs.c b/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/statfs.c
 index a6a5162..2155dc4 100644
 --- a/darling/src/libsystem_kernel/emulation/src/xnu_syscall/bsd/impl/stat/statfs.c
