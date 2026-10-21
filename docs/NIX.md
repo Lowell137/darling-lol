@@ -91,6 +91,9 @@ darling-lol --installer
 darling-lol-shell
 ```
 
+The application menu entry is `Darling Launcher`, and `darling-launcher` is an
+alias for `darling-lol` for scripts that prefer the neutral name.
+
 If the desktop entry does not appear, ensure your desktop session includes
 `~/.nix-profile/share` in `XDG_DATA_DIRS`, then log out and back in. Non-NixOS
 systems may need this desktop-session integration after installing Nix.

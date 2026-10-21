@@ -61,10 +61,15 @@ The normal launcher starts neither an Electron inspector nor client API/UI helpe
 
 ## Application-menu diagnostics and recovery options
 
-`scripts/create-desktop-entry.sh` creates an application-menu entry that runs
-`scripts/desktop-run.sh`, preserving the normal launcher behavior and saving
-stdout/stderr in `build/desktop-launch.log` with mode 0600. Logs can contain
-private session details; do not attach raw launcher logs to a public issue.
+`scripts/create-desktop-entry.sh` creates a `Darling Launcher` application-menu
+entry that runs `scripts/desktop-run.sh`, preserving the normal launcher behavior
+and saving stdout/stderr in `build/desktop-launch.log` with mode 0600. Logs can
+contain private session details; do not attach raw launcher logs to a public
+issue. The helper also removes the `league-of-legends.*` entry and icons written
+by older versions, but only when it can prove this project created them. The
+entry keeps `StartupWMClass=RiotClientServices`: Darling derives `WM_CLASS` from
+the basename of `argv[0]`, so that is the window class of the client the entry
+starts, while `Riot Client` is only its bundle display name.
 Region/locale remain the existing `RCLOL_REGION`/`RCLOL_LOCALE` options.
 
 `RCLOL_CDN_IPV4_ONLY` defaults to `1` in the Riot launcher and can be set to `0`

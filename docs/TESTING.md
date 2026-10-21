@@ -78,6 +78,7 @@ Host-only checks, which do not start Darling:
 python3 tools/riot-cdn-dns-offline-check.py
 python3 -m unittest discover -s tests -p 'test_hidden_riot_recovery.py'
 python3 -m unittest discover -s tests -p 'test_desktop_run.py'
+python3 -m unittest discover -s tests -p 'test_desktop_entry.py'
 python3 -m unittest discover -s tests -p 'test_urlsession_runner.py'
 ```
 
@@ -87,7 +88,10 @@ insensitivity, A queries, non-CDN names and misleading domain suffixes without
 sending a DNS query. Recovery tests use fake `/proc` entries and mock every
 compositor/shutdown command. The desktop test checks exit/argument forwarding,
 append-only output and tightening an existing public log to mode 0600. The
-runner test uses a fake `darling` executable to verify loopback fixtures and
+desktop-entry test renders the helper against a disposable `HOME` and checks
+the neutral fields, Exec quoting, icon paths, that only launcher artifacts
+this project created are removed, and that the checkout and packaged entries
+share their identity fields. The runner test uses a fake `darling` executable to verify loopback fixtures and
 private-prefix-only shutdown/cleanup.
 
 With the pinned Darling sources available, run the host resolver regression:

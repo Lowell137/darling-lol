@@ -1,5 +1,5 @@
 {
-  description = "Unofficial Darling League of Legends - experimental macOS LoL runner on Linux via Darling";
+  description = "Unofficial Darling launcher for the macOS game client on Linux";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -136,7 +136,7 @@
         pythonEnv
       ];
 
-      # FHS environment for building and running Darling and League of Legends.
+      # FHS environment for building and running Darling and the macOS game client.
       # Darling requires root/multitasking mount & namespace semantics, /usr/local layout,
       # and dynamically compiled overlays. An FHS environment provides the standard standard
       # filesystem hierarchies (/usr/include, /usr/lib, /usr/bin) and native dynamic linker.
@@ -223,10 +223,10 @@
 
           mkdir -p $out/bin $out/share/darling-lol $out/share/icons/hicolor/scalable/apps $out/share/icons/hicolor/128x128/apps $out/share/pixmaps $out/share/applications
           cp -r * $out/share/darling-lol/
-          cp darling-lol.svg $out/share/icons/hicolor/scalable/apps/darling-lol.svg
-          cp darling-lol.png $out/share/icons/hicolor/128x128/apps/darling-lol.png
-          cp darling-lol.png $out/share/pixmaps/darling-lol.png
-          cp darling-lol.svg $out/share/pixmaps/darling-lol.svg
+          cp darling-lol.svg $out/share/icons/hicolor/scalable/apps/darling-launcher.svg
+          cp darling-lol.png $out/share/icons/hicolor/128x128/apps/darling-launcher.png
+          cp darling-lol.png $out/share/pixmaps/darling-launcher.png
+          cp darling-lol.svg $out/share/pixmaps/darling-launcher.svg
 
           # Install configured launcher
           substitute ./darling-lol-launcher.sh $out/bin/darling-lol \
@@ -235,6 +235,7 @@
             --replace-fail "@UNSHARE_BIN@" "${pkgs.util-linux}/bin/unshare"
           chmod +x $out/bin/darling-lol
           wrapProgram $out/bin/darling-lol --prefix PATH : ${pkgs.lib.makeBinPath [ pythonEnv pkgs.coreutils pkgs.util-linux pkgs.gawk ]}
+          ln -s darling-lol $out/bin/darling-launcher
 
           makeWrapper $out/bin/darling-lol $out/bin/darling-lol-installer \
             --add-flags "--installer"
@@ -245,15 +246,15 @@
           makeWrapper $out/bin/darling-lol $out/bin/darling-lol-build \
             --add-flags "./scripts/build.sh"
 
-          cat << 'DESKTOP_EOF' > $out/share/applications/darling-lol.desktop
+          cat << 'DESKTOP_EOF' > $out/share/applications/darling-launcher.desktop
 [Desktop Entry]
 Categories=Game;
-Comment=Unofficial League of Legends macOS client compatibility layer for Linux via Darling
-Exec=darling-lol
-GenericName=MOBA Game
-Icon=darling-lol
-Keywords=League;LoL;Riot;Darling;
-Name=League of Legends (unofficial)
+Comment=Unofficial launcher for the macOS game client via Darling
+Exec=darling-launcher
+GenericName=Game
+Icon=darling-launcher
+Keywords=Darling;Launcher;Compatibility;
+Name=Darling Launcher
 StartupWMClass=RiotClientServices
 Terminal=true
 Type=Application
@@ -264,7 +265,7 @@ DESKTOP_EOF
         '';
 
         meta = with pkgs.lib; {
-          description = "Unofficial tooling and patches to run macOS League of Legends on Linux with Darling";
+          description = "Unofficial tooling and patches to run the macOS game client on Linux with Darling";
           homepage = "https://github.com/lucannez64/darling-lol";
           license = licenses.gpl3Only;
           platforms = [ "x86_64-linux" ];
@@ -334,7 +335,16 @@ DESKTOP_EOF
           # Tests use private stub binaries/repositories, never Darling itself.
           python3 -m unittest discover -s tests -v
           python3 scripts/validate.py
-          grep -q '^Terminal=true$' ${darlingLol}/share/applications/darling-lol.desktop
+          grep -q '^Terminal=true$' ${darlingLol}/share/applications/darling-launcher.desktop
+          grep -q '^Name=Darling Launcher$' ${darlingLol}/share/applications/darling-launcher.desktop
+          grep -q '^Icon=darling-launcher$' ${darlingLol}/share/applications/darling-launcher.desktop
+          grep -q '^Keywords=Darling;Launcher;Compatibility;$' ${darlingLol}/share/applications/darling-launcher.desktop
+          grep -q '^Categories=Game;$' ${darlingLol}/share/applications/darling-launcher.desktop
+          # Darling derives WM_CLASS from argv[0], so the window class is the
+          # client executable name; this is an interoperability identifier.
+          grep -q '^StartupWMClass=RiotClientServices$' ${darlingLol}/share/applications/darling-launcher.desktop
+          ! grep -qiE '^(Name|Comment|GenericName|Keywords)=.*(League|LoL|Riot|Vanguard|anti-cheat)' ${darlingLol}/share/applications/darling-launcher.desktop
+          test -x ${darlingLol}/bin/darling-launcher
           touch "$out"
         '';
       };
@@ -349,7 +359,7 @@ DESKTOP_EOF
         default = {
           type = "app";
           program = "${darlingLol}/bin/darling-lol";
-          meta.description = "Launch League of Legends via Darling";
+          meta.description = "Launch the macOS game client via Darling";
         };
         shell = {
           type = "app";
@@ -359,7 +369,7 @@ DESKTOP_EOF
         installer = {
           type = "app";
           program = "${darlingLol}/bin/darling-lol-installer";
-          meta.description = "Run the Darling and League of Legends rootless installer";
+          meta.description = "Run the Darling rootless installer";
         };
         build = {
           type = "app";
@@ -371,7 +381,7 @@ DESKTOP_EOF
       devShells.${system}.default = pkgs.mkShell {
         packages = buildDeps ++ [ darlingLolFhs ];
         shellHook = ''
-          echo "Darling LoL build & development environment loaded."
+          echo "Darling build & development environment loaded."
           echo "Tip: Run 'darling-lol-fhs' to enter the FHS build sandbox if standard paths (/usr/include, /usr/lib) are needed."
         '';
       };

@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="darling-lol">
-  <title>darling-lol</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Darling Launcher">
+  <title>Darling Launcher</title>
   <rect x="8" y="8" width="112" height="112" rx="26" fill="#0f172a"/>
   <path fill-rule="evenodd" fill="#2dd4bf" d="M38 30h20c21 0 34 15 34 34s-13 34-34 34H38V30zm18 18v32h2c9 0 16-7 16-16s-7-16-16-16h-2z"/>
   <rect x="30" y="90" width="68" height="8" rx="4" fill="#818cf8"/>

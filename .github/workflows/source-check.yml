@@ -25,6 +25,7 @@ jobs:
       - run: python -m unittest discover -s tests -p 'test_nix_repairs.py'
       - run: python -m unittest discover -s tests -p 'test_hidden_riot_recovery.py'
       - run: python -m unittest discover -s tests -p 'test_desktop_run.py'
+      - run: python -m unittest discover -s tests -p 'test_desktop_entry.py'
       - run: python -m unittest discover -s tests -p 'test_urlsession_runner.py'
       - run: python -m unittest discover -s tests -p 'test_system_profiler.py'
       - run: python -m unittest discover -s tests -p 'test_metal_device_info.py'
