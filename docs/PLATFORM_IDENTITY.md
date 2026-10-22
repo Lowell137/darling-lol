@@ -197,3 +197,10 @@ keeps no identity of its own, so it reports the same values as IOKit, including 
 override saved by this tool. A field the guest does not provide is left out.
 `python3 -m unittest tests.test_system_profiler` checks the output with stub
 commands.
+
+`SPDisplaysDataType` reads the host DRM cards. With `DARLING_METAL_MAC_GPU_NAME`
+set (the launcher default), an AMD or NVIDIA host card is reported as the
+`MacBookPro16,1` discrete GPU: `AMD Radeon Pro 5500M`, vendor `0x1002`, device
+`0x7340`, bus PCIe and VRAM from `DARLING_METAL_VRAM_MB` (4096 by default). This
+keeps the display report consistent with `MTLDevice.name`; without the variable
+the host card is reported as-is.

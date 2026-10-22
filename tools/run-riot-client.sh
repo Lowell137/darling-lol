@@ -38,6 +38,9 @@ unset RCLOL_UX_ARG2 RCLOL_UX_ARG2_SLOT
 # Explicit 0 or an empty value selects the CPU fallback for diagnostics.
 # DARLING_METAL_MAC_GPU_NAME reports the MacBookPro16,1 GPU of the host vendor (AMD or Intel) as
 # MTLDevice.name, matching the model IOKit reports; memory figures stay the host's.
+# VRAM clamp: honor an explicit DARLING_METAL_VRAM_MB, otherwise pin 4096 MB so the
+# 5500M identity does not leak the host card's heap size.
+export DARLING_METAL_VRAM_MB="${DARLING_METAL_VRAM_MB:-4096}"
 for option in RCLOL_GPU_DIRECT_PRESENT RCLOL_GPU_DIRECT_ASYNC RCLOL_GPU_DIRECT_VSYNC DARLING_CA_PRESENT_AT_COMMIT DARLING_CA_SKIP_LOCAL_IOSURFACE_RENDER RCLOL_FORWARD_MOUSE_MOVED RCLOL_MOUSE_CONFINEMENT DARLING_METAL_MAC_GPU_NAME; do
  eval 'value=${'"$option"'-1}'
  case "$value" in 0|'') unset "$option";; *) export "$option=$value";; esac
