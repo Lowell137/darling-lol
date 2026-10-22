@@ -46,6 +46,11 @@ for option in RCLOL_GPU_DIRECT_PRESENT RCLOL_GPU_DIRECT_ASYNC RCLOL_GPU_DIRECT_V
  case "$value" in 0|'') unset "$option";; *) export "$option=$value";; esac
 done
 prefix=$prefix_dir
+# Resolve the loader before the environment filter replaces PATH with the Mac layout.
+darling_bin=$(command -v darling) || {
+ echo 'darling loader not found in PATH' >&2
+ exit 1
+}
 # RIOT_GUEST_HOME is host-side; DYLD paths must be relative to the guest root.
 case "$guest_home" in
  "$prefix"/*) guest_path=/${guest_home#"$prefix"/} ;;
@@ -137,6 +142,6 @@ exec python3 "$runner_dir/exec-guest.py" env -u ELECTRON_RUN_AS_NODE -u DYLD_INS
   DYLD_FRAMEWORK_PATH="${DYLD_FRAMEWORK_PATH:-$guest_path/RuntimeFrameworks}" \
   DARLING_XSHM_LIBRARY="${DARLING_XSHM_LIBRARY:-$guest_path/libDarlingXShm.dylib}" \
   DARLING_CPUID_FAULT="${RCLOL_CPUID_FAULT:-1}" \
-  darling "$A" --region="${RCLOL_REGION:-EUW}" --locale="${RCLOL_LOCALE:-en_GB}" \
+  "$darling_bin" "$A" --region="${RCLOL_REGION:-EUW}" --locale="${RCLOL_LOCALE:-en_GB}" \
     "$@" \
     --log-dir="$guest_path/Library/Logs/Riot Games/Riot Client"
