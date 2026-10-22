@@ -54,7 +54,11 @@ displays() { # one line per GPU: vendor|device|vram MB or empty|name|bus
     1002|10de) vendor=1002; device=7340; name='AMD Radeon Pro 5500M'
                vram=${DARLING_METAL_VRAM_MB:-4096}
                case "$vram" in ''|*[!0-9]*) vram=4096;; esac
-               [ "$vram" -eq 0 ] 2>/dev/null && vram=4096
+               # Keep the numeric test overflow-safe: a long digit string must
+               # fall back before the shell compares it.
+               if [ "${#vram}" -gt 7 ] || [ "$vram" -eq 0 ] || [ "$vram" -gt 1048576 ]; then
+                vram=4096
+               fi
                bus=pcie;;
     8086) vendor=8086; device=3e9b; name='Intel UHD Graphics 630'
           vram=; bus=builtin;;
