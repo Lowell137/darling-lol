@@ -52,7 +52,12 @@ displays() { # one line per GPU: vendor|device|vram MB or empty|name|bus
   if [ "$mac_spoof" = 1 ]; then
    case "$vendor" in
     1002|10de) vendor=1002; device=7340; name='AMD Radeon Pro 5500M'
-               vram=${DARLING_METAL_VRAM_MB:-4096}; bus=pcie;;
+               vram=${DARLING_METAL_VRAM_MB:-4096}
+               case "$vram" in ''|*[!0-9]*) vram=4096;; esac
+               [ "$vram" -eq 0 ] 2>/dev/null && vram=4096
+               bus=pcie;;
+    8086) vendor=8086; device=3e9b; name='Intel UHD Graphics 630'
+          vram=; bus=builtin;;
    esac
   fi
   echo "$vendor|$device|$vram|$name|$bus"
