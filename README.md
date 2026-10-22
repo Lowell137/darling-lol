@@ -152,4 +152,7 @@ repository.
 See [compliance and terminology guidance](docs/COMPLIANCE.md) for the project's scope and
 review expectations.
 
+## Donations
 
+If you want to help me live or just pay me a coffee
+you can at [Ko-Fi](https://ko-fi.com/lucannez64)
